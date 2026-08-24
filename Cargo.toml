@@ -39,3 +39,34 @@ anyhow = "1.0"
 gpui = "0.2.2"
 egui = "0.29"
 eframe = "0.29"
+
+[[example]]
+name = "gpui_morph_demo"
+required-features = ["gpui"]
+
+[[example]]
+name = "iced_morph_demo"
+required-features = ["iced"]
+
+[[example]]
+name = "egui_morph_demo"
+required-features = ["egui"]
+
+[[example]]
+name = "rust_ui_integration"
+required-features = ["egui"]
+
+[[example]]
+name = "cli_morph"
+required-features = []
+
+[[example]]
+name = "web_server"
+required-features = []
+
+[profile.dev]
+debug = 1
+
+[profile.test]
+debug = 1
+

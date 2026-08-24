@@ -8,31 +8,48 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+  RUSTC_WRAPPER: sccache
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
-  check:
-    name: Check, Format, Clippy & Test
+  clippy:
+    name: Clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+      - name: Run sccache-cache
+        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
       - name: Format check
         run: cargo fmt --all -- --check
       - name: Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
-      - name: Unit tests
-        run: cargo test --lib --all-features
-      - name: Integration tests
-        run: cargo test --test morph_test
-      - name: Doc tests
-        run: cargo test --doc --all-features
+
+  test:
+    name: Tests (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run sccache-cache
+        uses: mozilla/actions-sccache@v1
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
+      - name: Tests
+        run: |
+          cargo test --all-targets --all-features
+          cargo test --doc --all-features
 
   test-macos:
     name: Tests (macOS)
@@ -40,9 +57,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - name: Run sccache-cache
+        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
-      - run: cargo test --lib --all-features
-      - run: cargo test --test morph_test
+      - name: Tests
+        run: |
+          cargo test --all-targets --all-features
+          cargo test --doc --all-features
 
   deny:
     name: Cargo Deny
@@ -59,5 +80,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
+      - name: Run sccache-cache
+        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - run: cargo check --target wasm32-unknown-unknown --features wasm --no-default-features
