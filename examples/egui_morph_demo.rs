@@ -261,12 +261,9 @@ impl eframe::App for EguiMorphApp {
                                 .color(egui::Color32::from_rgb(248, 250, 252)),
                         );
                         ui.label(
-                            egui::RichText::new(format!(
-                                "Progresso: {:.1}%",
-                                progress * 100.0
-                            ))
-                            .size(12.0)
-                            .color(egui::Color32::from_rgb(100, 116, 139)),
+                            egui::RichText::new(format!("Progresso: {:.1}%", progress * 100.0))
+                                .size(12.0)
+                                .color(egui::Color32::from_rgb(100, 116, 139)),
                         );
 
                         ui.add_space(12.0);
