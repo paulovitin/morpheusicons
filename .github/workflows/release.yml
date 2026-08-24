@@ -21,6 +21,10 @@ jobs:
           fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
       - run: cargo test --lib --all-features
       - run: cargo test --doc --all-features
       - run: cargo test --test morph_test
@@ -39,7 +43,13 @@ jobs:
       - name: Install cargo-semver-checks
         run: cargo install cargo-semver-checks
       - name: Check semver compliance
-        run: cargo semver-checks check-release
+        run: |
+          # Skip semver check if this is the first published version (no baseline)
+          if cargo semver-checks check-release 2>&1 | grep -q "no previously published version"; then
+            echo "First release — no baseline to compare. Skipping."
+          else
+            cargo semver-checks check-release
+          fi
 
   publish:
     name: Publish to crates.io
