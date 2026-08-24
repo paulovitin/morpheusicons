@@ -39,7 +39,7 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
 
   test:
-    name: Tests (Ubuntu)
+    name: Tests (ubuntu-latest, stable)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
           cargo test --doc --all-features
 
   test-macos:
-    name: Tests (macOS)
+    name: Tests (macos-latest, stable)
     runs-on: macos-latest
     env:
       RUSTFLAGS: "-C split-debuginfo=unpacked"
