@@ -1,0 +1,127 @@
+# MorpheusIcons — LLM & Agent Documentation Context
+
+> MorpheusIcons is a physics-based vector icon morphing engine for Rust GUI frameworks (GPUI, egui, Iced, Leptos, Dioxus) and WebAssembly. It transforms **any stroke-based vector icon library** (from npm packages like `lucide-static`, CDN URLs, `lucide.dev` files, or Rust crates like `icondata`) into each other using spring physics oscillators and 2D Procrustes geometry.
+
+## Key Feature: Integrating Lucide (npm / lucide.dev / icondata) & External Icons
+
+MorpheusIcons works directly with icons from **Lucide**, **Heroicons**, **Tabler**, **Phosphor**, or raw `.svg` files.
+
+### 1. In JavaScript / Web Apps using `lucide-static` (npm)
+
+```bash
+npm install lucide-static
+```
+
+```javascript
+import init, { WasmMorphController } from './pkg/morpheusicons.js';
+import sunSvg from 'lucide-static/icons/sun.svg?raw';
+import moonSvg from 'lucide-static/icons/moon.svg?raw';
+
+await init();
+
+// Extract d="..." path string from Lucide SVGs or pass directly
+const sunPath  = "M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z";
+const moonPath = "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z";
+
+const controller = new WasmMorphController(sunPath, moonPath, "bouncy");
+controller.morphToEnd();
+
+function render(dt) {
+  controller.update(dt);
+  document.getElementById('icon-path').setAttribute('d', controller.currentSvgPath());
+}
+```
+
+### 2. Fetching Lucide Icons Dynamically via CDN (No npm needed)
+
+```javascript
+// Fetch raw SVGs directly from Lucide's unpkg CDN
+const [sunSvg, moonSvg] = await Promise.all([
+  fetch('https://unpkg.com/lucide-static@latest/icons/sun.svg').then(r => r.text()),
+  fetch('https://unpkg.com/lucide-static@latest/icons/moon.svg').then(r => r.text())
+]);
+
+const extractD = (svg) => svg.match(/d="([^"]+)"/)?.[1] || "";
+const controller = new WasmMorphController(extractD(sunSvg), extractD(moonSvg), "gentle");
+```
+
+### 3. In Rust Apps using `icondata` Crate (Lucide, Heroicons, Tabler for Rust)
+
+```toml
+[dependencies]
+icondata = "0.4"
+morpheusicons = "0.1"
+```
+
+```rust
+use icondata::{LuSun, LuMoon}; // Lucide icons from icondata crate
+use morpheusicons::prelude::*;
+
+fn main() {
+    // icondata provides SVG path string in .data field
+    let sun_path  = LuSun.data;
+    let moon_path = LuMoon.data;
+
+    let mut controller = MorphController::from_sources(
+        &sun_path,
+        &moon_path,
+        SpringConfig::BOUNCY,
+    ).unwrap();
+
+    controller.set_target(1.0); // Morph to Moon!
+    controller.update(0.016);
+}
+```
+
+### 4. Parsing Full SVG Markup Files from `lucide.dev` (`icon_from_svg`)
+
+```rust
+use morpheusicons::icons::svg_extract::icon_from_svg;
+use morpheusicons::prelude::*;
+
+let sun_svg  = icon_from_svg(include_str!("../assets/lucide/sun.svg")).unwrap();
+let moon_svg = icon_from_svg(include_str!("../assets/lucide/moon.svg")).unwrap();
+
+let mut controller = MorphController::from_sources(&sun_svg, &moon_svg, SpringConfig::GENTLE).unwrap();
+```
+
+---
+
+## Core Math Architecture
+
+1. **SVG Path Parsing**: Parses SVG path command strings (`M`, `L`, `C`, `Q`, `A`, `H`, `V`, `S`, `T`, `Z`) into sub-paths.
+2. **Arc-Length Equidistant Resampling**: Resamples source and target paths into $N$ points spaced evenly along total arc length.
+3. **2D Procrustes Analysis**: Computes optimal 2D rotation matrix and translation vector aligning target geometry to source geometry to minimize RMS point distance.
+4. **Polar Angle Interpolation**: Interpolates control points along radial vectors to preserve geometric volume during rotation.
+5. **Spring Physics Solver**: Continuous second-order harmonic oscillator (stiffness $k$, damping $c$, mass $m$) driving animation progress $t$. Interrupted morphs smoothly adjust target with zero velocity discontinuity.
+
+---
+
+## Installation & Cargo.toml Setup
+
+```toml
+[dependencies]
+morpheusicons = { version = "0.1", features = ["catalog"] }
+```
+
+### Feature Flags Table
+
+| Feature Flag | Description | Default |
+|---|---|---|
+| `std` | Standard library support (floating point math) | Yes |
+| `catalog` | Built-in catalog of 60+ Lucide-style stroke icons | Yes |
+| `gpui` | GPUI widget integration for Zed editor framework | No |
+| `egui` | egui painter & widget integration | No |
+| `iced` | Iced SVG widget integration | No |
+| `leptos` | Leptos reactive signal component for web | No |
+| `dioxus` | Dioxus reactive signal component | No |
+| `serde` | Serialization & deserialization for paths & configs | No |
+| `wasm` | WebAssembly bindings (`wasm-bindgen`) | No |
+
+---
+
+## Resource & Documentation Links
+
+- **Web Showcase**: `index.html` (Interactive playground)
+- **Get Started & npm / Lucide Guide**: `get-started.html`
+- **Repository**: `https://github.com/rust-ui/ui`

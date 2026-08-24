@@ -1,0 +1,97 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the sections below to help us reproduce and fix the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal code or steps to reproduce the behavior.
+      placeholder: |
+        ```rust
+        use morpheusicons::prelude::*;
+
+        let ctrl = MorphController::new(...)?;
+        // ...
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+      placeholder: The morph should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened. Include error messages, panic traces, or screenshots if applicable.
+      placeholder: Instead, it...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: MorpheusIcons Version
+      description: "Which version are you using? (check Cargo.toml or `cargo tree -p morpheusicons`)"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework Integration
+      description: Which framework integration are you using (if any)?
+      multiple: true
+      options:
+        - None (core only)
+        - GPUI
+        - egui
+        - Iced
+        - Leptos
+        - Dioxus
+        - WASM
+        - Other
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        OS, Rust version, and any relevant details.
+      placeholder: |
+        - OS: macOS 14.5
+        - Rust: 1.79.0
+        - Features enabled: gpui, catalog
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or SVG path data relevant to the issue.
+    validations:
+      required: false

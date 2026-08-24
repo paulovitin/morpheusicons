@@ -1,0 +1,9 @@
+{
+  "files": [
+    "pages/index.html",
+    "pages/get-started.html"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

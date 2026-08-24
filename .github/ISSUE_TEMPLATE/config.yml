@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Discussion
+    url: https://github.com/paulo/morpheusicons/discussions
+    about: Ask questions, share ideas, or show off what you've built with MorpheusIcons
+  - name: 📖 Documentation
+    url: https://docs.rs/morpheusicons
+    about: Check the API documentation on docs.rs

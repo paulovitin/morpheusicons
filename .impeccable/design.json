@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-24T01:27:32.747113+00:00",
+  "title": "Design System: MorpheusIcons",
+  "extensions": {
+    "colorMeta": {
+      "kinetic-green": {
+        "role": "primary",
+        "displayName": "Kinetic Green",
+        "canonical": "#15803d",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "kinetic-green-bright": {
+        "role": "primary",
+        "displayName": "Kinetic Green Bright",
+        "canonical": "#22c55e",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ],
+        "note": "Non-text only \u2014 2.28:1 on white."
+      },
+      "kinetic-green-wash": {
+        "role": "primary",
+        "displayName": "Kinetic Green Wash",
+        "canonical": "#f0fdf4",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "kinetic-green-edge": {
+        "role": "primary",
+        "displayName": "Kinetic Green Edge",
+        "canonical": "#bbf7d0",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "bench-white": {
+        "role": "neutral",
+        "displayName": "Bench White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#111317",
+          "#1f232a",
+          "#3a4048",
+          "#5a626c",
+          "#8a919b",
+          "#b4bac2",
+          "#dcdfe5",
+          "#f7f8fa"
+        ]
+      },
+      "bench-ink": {
+        "role": "neutral",
+        "displayName": "Bench Ink",
+        "canonical": "#111317",
+        "tonalRamp": [
+          "#111317",
+          "#1f232a",
+          "#3a4048",
+          "#5a626c",
+          "#8a919b",
+          "#b4bac2",
+          "#dcdfe5",
+          "#f7f8fa"
+        ]
+      },
+      "bench-hairline": {
+        "role": "neutral",
+        "displayName": "Bench Hairline",
+        "canonical": "#e5e8ec",
+        "tonalRamp": [
+          "#111317",
+          "#1f232a",
+          "#3a4048",
+          "#5a626c",
+          "#8a919b",
+          "#b4bac2",
+          "#dcdfe5",
+          "#f7f8fa"
+        ]
+      },
+      "bench-grid": {
+        "role": "neutral",
+        "displayName": "Bench Grid",
+        "canonical": "#dcdfe5",
+        "tonalRamp": [
+          "#111317",
+          "#1f232a",
+          "#3a4048",
+          "#5a626c",
+          "#8a919b",
+          "#b4bac2",
+          "#dcdfe5",
+          "#f7f8fa"
+        ]
+      },
+      "bench-tray": {
+        "role": "neutral",
+        "displayName": "Bench Tray",
+        "canonical": "#f7f8fa",
+        "tonalRamp": [
+          "#111317",
+          "#1f232a",
+          "#3a4048",
+          "#5a626c",
+          "#8a919b",
+          "#b4bac2",
+          "#dcdfe5",
+          "#f7f8fa"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#111827",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "slate-quiet": {
+        "role": "neutral",
+        "displayName": "Slate Quiet",
+        "canonical": "#4b5563",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "slate-mid": {
+        "role": "neutral",
+        "displayName": "Slate Mid",
+        "canonical": "#374151",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "rule-gray": {
+        "role": "neutral",
+        "displayName": "Rule Gray",
+        "canonical": "#e5e7eb",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "field-gray": {
+        "role": "neutral",
+        "displayName": "Field Gray",
+        "canonical": "#d1d5db",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "caution-wash": {
+        "role": "tertiary",
+        "displayName": "Caution Wash",
+        "canonical": "#fffbeb",
+        "tonalRamp": [
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      },
+      "caution-edge": {
+        "role": "tertiary",
+        "displayName": "Caution Edge",
+        "canonical": "#fde68a",
+        "tonalRamp": [
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      },
+      "caution-ink": {
+        "role": "tertiary",
+        "displayName": "Caution Ink",
+        "canonical": "#b45309",
+        "tonalRamp": [
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      },
+      "alert-red": {
+        "role": "tertiary",
+        "displayName": "Alert Red",
+        "canonical": "#dc2626",
+        "tonalRamp": [
+          "#7f1d1d",
+          "#991b1b",
+          "#b91c1c",
+          "#dc2626",
+          "#ef4444",
+          "#f87171",
+          "#fca5a5",
+          "#fee2e2"
+        ]
+      },
+      "kinetic-green-dark": {
+        "role": "primary",
+        "displayName": "Kinetic Green Dark",
+        "canonical": "#166534",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "kinetic-green-deepest": {
+        "role": "primary",
+        "displayName": "Kinetic Green Deepest",
+        "canonical": "#14532d",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "kinetic-green-signal": {
+        "role": "accent",
+        "displayName": "Kinetic Green Signal",
+        "canonical": "#16a34a",
+        "tonalRamp": [
+          "#14532d",
+          "#166534",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ],
+        "note": "Non-text only \u2014 3.30:1 on white."
+      },
+      "scrollbar-thumb": {
+        "role": "neutral",
+        "displayName": "Scrollbar Thumb",
+        "canonical": "#c2c7cf"
+      },
+      "code-keyword": {
+        "role": "neutral",
+        "displayName": "Code Keyword",
+        "canonical": "#4ade80",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-accent": {
+        "role": "neutral",
+        "displayName": "Code Accent",
+        "canonical": "#86efac",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-type": {
+        "role": "neutral",
+        "displayName": "Code Type",
+        "canonical": "#bbf7d0",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-string": {
+        "role": "neutral",
+        "displayName": "Code String",
+        "canonical": "#fcd34d",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-number": {
+        "role": "neutral",
+        "displayName": "Code Number",
+        "canonical": "#fbbf24",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-comment": {
+        "role": "neutral",
+        "displayName": "Code Comment",
+        "canonical": "#8b96a8",
+        "note": "Code panel token \u2014 measured on #111827."
+      },
+      "code-punct": {
+        "role": "neutral",
+        "displayName": "Code Punct",
+        "canonical": "#9ca3af",
+        "note": "Code panel token \u2014 measured on #111827."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero statement. Once per page, never twice. 30px rising to 48px at 640px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles inside cards and panels."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The product wordmark and dialog-level headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions and supporting copy in Slate Quiet. Measure capped at 65-75ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The workhorse. Every control, chip, tab, badge and eyebrow. 12px is the most-used size in the system."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Every number, path string, command and machine-readable badge. Never used decoratively."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 2px 6px rgba(17, 19, 23, 0.06)",
+        "purpose": "The only shadow permitted at rest. Lifts a white card off a white bench without reading as a shadow."
+      },
+      {
+        "name": "action-affirm",
+        "value": "0 4px 14px rgba(22, 163, 74, 0.24)",
+        "purpose": "Green-tinted shadow under primary buttons, so the button appears to emit rather than cast."
+      },
+      {
+        "name": "action-affirm-lg",
+        "value": "0 8px 28px rgba(22, 163, 74, 0.30)",
+        "purpose": "The header GitHub button's heavier variant of the same idea."
+      },
+      {
+        "name": "state-lift",
+        "value": "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)",
+        "purpose": "Applied on selection to chips, spring pills and tabs. The selected item lifts; siblings stay flat."
+      },
+      {
+        "name": "specimen-glow",
+        "value": "drop-shadow(0 0 30px rgba(22, 163, 74, 0.3))",
+        "purpose": "The signature effect, on the morphing SVG alone. The specimen under the light. Exists nowhere else."
+      }
+    ],
+    "motion": [
+      {
+        "name": "spring",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "The house curve. Overshoot easing that mirrors the damped oscillator inside the product. Used on every meaningful transition."
+      },
+      {
+        "name": "state",
+        "value": "200ms",
+        "purpose": "Colour, border and shadow changes on hover, focus and selection."
+      },
+      {
+        "name": "reveal",
+        "value": "600ms",
+        "purpose": "Progressive section reveals, staggered 150ms apart."
+      },
+      {
+        "name": "entrance",
+        "value": "800ms",
+        "purpose": "Spring reveal for first-paint content."
+      },
+      {
+        "name": "engine-frame",
+        "value": "75ms",
+        "purpose": "The stage SVG only. Short enough not to lag the frame-by-frame engine driving it."
+      },
+      {
+        "name": "gear-rotation",
+        "value": "20s linear infinite",
+        "purpose": "The logo gear's slow ambient rotation."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single filled action. Green-tinted shadow, brightens on hover, no transform.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z\"/></svg><span>GitHub</span></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 10px 14px; background: #16a34a; color: #ffffff; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; border: none; border-radius: 12px; box-shadow: 0 8px 28px rgba(22,163,74,0.3); cursor: pointer; transition: background 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-btn-primary:hover { background: #22c55e; } .ds-btn-primary:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White with a hairline. Label darkens and border greens on hover. Used for docs and crates.io links.",
+      "html": "<button class=\"ds-btn-secondary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253\"/></svg><span>Read the Docs</span></button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 20px; background: #ffffff; color: #374151; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 14px; font-weight: 700; border: 1px solid #d1d5db; border-radius: 12px; cursor: pointer; transition: color 200ms cubic-bezier(0.34,1.56,0.64,1), border-color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-btn-secondary:hover { color: #111827; border-color: #4ade80; } .ds-btn-secondary:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Preset Chip",
+      "kind": "chip",
+      "refersTo": "preset-chip",
+      "description": "The morph-pair selector. Rest is white with a hairline and a chevron that inherits currentColor; exactly one chip in the set is filled green. Border width is explicit on both states so the edge never shifts on selection.",
+      "html": "<div class=\"ds-chip-row\"><button class=\"ds-chip\"><span>Sun / Moon</span><svg class=\"ds-chip-mark\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></button><button class=\"ds-chip ds-chip--active\"><span>Play / Pause</span><svg class=\"ds-chip-mark\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></button></div>",
+      "css": ".ds-chip-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .ds-chip { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 12px; background: #ffffff; color: #4b5563; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #e5e8ec; border-radius: 8px; cursor: pointer; transition: color 200ms cubic-bezier(0.34,1.56,0.64,1), border-color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-chip-mark { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.5; } .ds-chip:hover { color: #111827; border-color: #4ade80; } .ds-chip:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; } .ds-chip--active { background: #16a34a; color: #ffffff; border-color: #4ade80; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); } .ds-chip--active:hover { color: #ffffff; }"
+    },
+    {
+      "name": "Spring Segmented Control",
+      "kind": "custom",
+      "refersTo": "spring-pill",
+      "description": "A three-way radiogroup for the spring preset. One filled pill, two flat. 8px radius, 44px tall.",
+      "html": "<div class=\"ds-springgroup\" role=\"radiogroup\" aria-label=\"Spring configuration\"><button class=\"ds-spring ds-spring--active\" role=\"radio\" aria-checked=\"true\">BOUNCY</button><button class=\"ds-spring\" role=\"radio\" aria-checked=\"false\">GENTLE</button><button class=\"ds-spring\" role=\"radio\" aria-checked=\"false\">SNAPPY</button></div>",
+      "css": ".ds-springgroup { display: flex; align-items: center; gap: 8px; } .ds-spring { min-height: 44px; padding: 10px 16px; background: #ffffff; color: #6b7280; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; border: 1px solid #e5e8ec; border-radius: 8px; cursor: pointer; transition: color 200ms cubic-bezier(0.34,1.56,0.64,1), background 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-spring:hover { color: #111827; } .ds-spring:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; } .ds-spring--active { background: #16a34a; color: #ffffff; border-color: #16a34a; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); } .ds-spring--active:hover { color: #ffffff; }"
+    },
+    {
+      "name": "Framework Tabs",
+      "kind": "nav",
+      "refersTo": "framework-tab",
+      "description": "A tablist housed in a recessed gray tray. The selected tab is the only filled element; the rest are transparent.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Framework selection\"><button class=\"ds-tab ds-tab--active\" role=\"tab\" aria-selected=\"true\">Leptos</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">GPUI</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">egui</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Iced</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Dioxus</button></div>",
+      "css": ".ds-tabs { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 16px; } .ds-tab { min-height: 44px; padding: 10px 14px; background: transparent; color: #6b7280; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-tab:hover { color: #111827; } .ds-tab:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; } .ds-tab--active { background: #16a34a; color: #ffffff; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); } .ds-tab--active:hover { color: #ffffff; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The bench's working surface. White, 16px, one hairline, and the only resting shadow in the system.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Multi-Framework Rust Integration</h3><p class=\"ds-card-body\">Copy ready-to-use code for your favorite framework.</p></div>",
+      "css": ".ds-card { padding: 24px; background: #ffffff; border: 1px solid #e5e8ec; border-radius: 16px; box-shadow: 0 2px 6px rgba(17,19,23,0.06); } .ds-card-title { margin: 0 0 4px; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 20px; font-weight: 700; color: #111827; } .ds-card-body { margin: 0; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 400; color: #6b7280; }"
+    },
+    {
+      "name": "Language Select",
+      "kind": "input",
+      "refersTo": "select-field",
+      "description": "The only true form control on the surface. Native select with appearance stripped and a drawn chevron. Capped at 88px below 640px so the header never forces horizontal page scroll.",
+      "html": "<div class=\"ds-selectwrap\"><label class=\"ds-sr-only\" for=\"ds-lang\">Select language</label><select class=\"ds-select\" id=\"ds-lang\"><option>EN &mdash; English</option><option>PT &mdash; Portugu&ecirc;s</option><option>JA &mdash; &#26085;&#26412;&#35486;</option></select><svg class=\"ds-select-glyph\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></div>",
+      "css": ".ds-selectwrap { position: relative; display: inline-block; } .ds-select { appearance: none; -webkit-appearance: none; min-height: 44px; padding: 8px 32px 8px 12px; background: #ffffff; color: #374151; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; border: 1px solid #d1d5db; border-radius: 12px; cursor: pointer; transition: border-color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-select:hover { border-color: #4ade80; } .ds-select:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; } .ds-select-glyph { position: absolute; right: 10px; top: 50%; width: 14px; height: 14px; transform: translateY(-50%); color: #9ca3af; pointer-events: none; } .ds-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }"
+    },
+    {
+      "name": "Spring Progress Slider",
+      "kind": "input",
+      "description": "The scrub control for the morph. Label left, mono percentage readout right in Kinetic Green, then a green-accented track.",
+      "html": "<div class=\"ds-slider\"><div class=\"ds-slider-head\"><label for=\"ds-progress\">Spring Progress (t)</label><span class=\"ds-slider-val\">62.4%</span></div><input class=\"ds-slider-input\" type=\"range\" id=\"ds-progress\" min=\"0\" max=\"100\" value=\"62\"></div>",
+      "css": ".ds-slider { display: flex; flex-direction: column; gap: 16px; } .ds-slider-head { display: flex; align-items: center; justify-content: space-between; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 600; color: #6b7280; } .ds-slider-val { font-family: \"JetBrains Mono\", ui-monospace, monospace; font-size: 14px; font-weight: 700; color: #16a34a; } .ds-slider-input { width: 100%; height: 8px; background: #e5e7eb; border-radius: 8px; appearance: none; -webkit-appearance: none; accent-color: #16a34a; cursor: pointer; } .ds-slider-input:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Code Panel",
+      "kind": "custom",
+      "refersTo": "code-panel",
+      "description": "The only dark surface in the system. Graphite ground, mono text, and a copy button that lives on dark.",
+      "html": "<div class=\"ds-codewrap\"><pre class=\"ds-code\"><code>cargo add morpheusicons --features leptos</code></pre><button class=\"ds-copy\" aria-label=\"Copy code to clipboard\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"16\" height=\"16\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"/><path d=\"M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1\"/></svg><span>Copy</span></button></div>",
+      "css": ".ds-codewrap { position: relative; } .ds-code { margin: 0; padding: 24px; background: #111827; color: #e5e7eb; font-family: \"JetBrains Mono\", ui-monospace, monospace; font-size: 14px; line-height: 1.625; border: 1px solid #1f2937; border-radius: 16px; overflow-x: auto; } .ds-copy { position: absolute; top: 16px; right: 16px; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 12px; background: #374151; color: #d1d5db; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; border: 1px solid #4b5563; border-radius: 8px; cursor: pointer; transition: background 200ms cubic-bezier(0.34,1.56,0.64,1), color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-copy:hover { background: #4b5563; color: #ffffff; } .ds-copy:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }"
+    },
+    {
+      "name": "The Stage",
+      "kind": "custom",
+      "description": "The signature component. A recessed tray holding the morphing specimen, with a pulsing live eyebrow and a mono pair badge that announces state to screen readers.",
+      "html": "<div class=\"ds-stage\"><div class=\"ds-stage-head\"><span class=\"ds-eyebrow\"><span class=\"ds-dot\" aria-hidden=\"true\"></span>Interactive Morph Stage</span><span class=\"ds-badge\" aria-live=\"polite\">Sun &#10231; Moon</span></div><div class=\"ds-well\" role=\"button\" tabindex=\"0\" aria-label=\"Toggle icon morph animation\"><svg class=\"ds-specimen\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"/></svg><p class=\"ds-stage-hint\"><span class=\"ds-dot ds-dot--still\" aria-hidden=\"true\"></span>Click or press Space to morph &rarr; Moon</p></div></div>",
+      "css": ".ds-stage { display: flex; flex-direction: column; gap: 24px; padding: 24px; background: #ffffff; border: 1px solid #e5e8ec; border-radius: 16px; box-shadow: 0 2px 6px rgba(17,19,23,0.06); } .ds-stage-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; } .ds-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; } .ds-dot { width: 8px; height: 8px; border-radius: 9999px; background: #22c55e; animation: dsPulse 2s cubic-bezier(0.4,0,0.6,1) infinite; } .ds-dot--still { animation: none; } @keyframes dsPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } } .ds-badge { padding: 4px 12px; background: #f0fdf4; color: #15803d; font-family: \"JetBrains Mono\", ui-monospace, monospace; font-size: 14px; font-weight: 700; border: 1px solid #bbf7d0; border-radius: 9999px; } .ds-well { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px; padding: 24px; background: #f7f8fa; border: 1px solid #e5e7eb; border-radius: 16px; cursor: pointer; transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1); } .ds-well:hover { transform: scale(1.01); } .ds-well:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; } .ds-specimen { width: 112px; height: 112px; color: #16a34a; filter: drop-shadow(0 0 30px rgba(22,163,74,0.3)); } .ds-stage-hint { display: flex; align-items: center; gap: 8px; margin: 24px 0 0; font-family: \"Space Grotesk\", system-ui, sans-serif; font-size: 14px; font-weight: 700; color: #6b7280; transition: color 200ms cubic-bezier(0.34,1.56,0.64,1); } .ds-well:hover .ds-stage-hint { color: #111827; } @media (prefers-reduced-motion: reduce) { .ds-dot, .ds-well, .ds-stage-hint { animation: none !important; transition: none !important; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Physics Lab Bench",
+    "overview": "MorpheusIcons is an engine that turns one icon into another using spring physics and Procrustes geometry. The interface that presents it is a bench: a clean white working surface, a faint measurement grid printed on it, calibrated controls at the edges, and one specimen under the light. The specimen is the morph. Everything else is apparatus, and apparatus that draws attention to itself is apparatus that failed.\n\nThe philosophy is precise, warm, generous. Engineering rigor - exact hairlines, a mono readout for every number, 44px minimum on everything touchable - softened by real breathing room and 8-16px corners rather than hard ones. The audience is a Rust or web developer evaluating in thirty seconds; the surface has to read as credible instrumentation immediately, and it has to be pleasant enough that they stay and drag the slider. Rigor without warmth reads as a spec sheet, and nobody plays with a spec sheet.\n\nOnly one color carries energy. Kinetic Green marks the things that move or can be made to move - the live dot, the active pair, the running spring, the primary action. Against a neutral bench it does the entire job of directing attention, which is why the neutrals must stay genuinely neutral. Four things are explicitly rejected: the dark neon dev-tool aesthetic, emoji standing in as UI vocabulary, gradient-and-glow SaaS landing energy, and shouty marketing weight.",
+    "keyCharacteristics": [
+      "White bench, hairline separations, near-zero shadow. Depth is a response, not a decoration.",
+      "Exactly one accent family. Green means kinetic; nothing else earns color.",
+      "A 24px dot grid printed faintly under everything, establishing measurement.",
+      "Mono for every number, code, and machine-readable badge. Sans for everything a human wrote.",
+      "Spring easing (cubic-bezier(0.34, 1.56, 0.64, 1)) on every meaningful transition - the interface obeys the same physics as the product.",
+      "Stroke-based iconography at 2px, round caps and joins, 24x24. The icon language is the product."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Green is the only color that carries meaning. If a new element needs to stand out and it is not live, selected, or in motion, the answer is weight, size, or space - never a new hue. A second accent family is how this system dies.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Hairline Rule",
+        "body": "Every border in the system is 1px and one of two near-identical grays. Card and pill chrome uses Bench Hairline (#e5e8ec); Tailwind's border utilities resolve to Rule Gray (#e5e7eb). They are 1/255 apart and read as one line. Do not add a third border color, and do not exceed 1px.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inversion Rule",
+        "body": "Dark surfaces exist for exactly one purpose: code. A graphite panel signals 'this is machine text you will copy.' Nothing else in the system goes dark, ever.",
+        "section": "colors"
+      },
+      {
+        "name": "The 700 Ceiling Rule",
+        "body": "Space Grotesk ships nothing above 700, and the project loads 400/500/600/700. Anything asking for 800 gets a browser-synthesized fake bold - smeared stems, broken optical weight. Use font-bold (700) as the maximum.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Means Machine Rule",
+        "body": "If a human wrote it, it is Space Grotesk. If a machine produced it or a machine will consume it - a coordinate, a percentage, a d= string, a cargo command, a license identifier - it is JetBrains Mono. There is no aesthetic use of mono in this system.",
+        "section": "typography"
+      },
+      {
+        "name": "The Small-Type Rule",
+        "body": "12px is a legitimate primary size here, but only at weight 700 and only in Slate Mid or darker. 12px at 400 in Slate Quiet is below the floor; step up to 14px instead.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two-Breakpoint Rule",
+        "body": "Design for 640px and 1024px. If a layout needs a third breakpoint to work, the layout is wrong.",
+        "section": "layout"
+      },
+      {
+        "name": "The 44px Floor Rule",
+        "body": "Nothing clickable is shorter than 44px, including 12px-label pills and icon-only buttons. Pad, don't shrink.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "A surface nobody is interacting with casts nothing beyond the 2px/6% card shadow. If you find yourself adding a resting shadow to create hierarchy, use a hairline or space instead.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Singular Glow Rule",
+        "body": "The specimen glow belongs to the morphing icon alone. The moment a second element glows, neither one means anything. The stage card is an ordinary card: hairline, 16px, resting shadow. Its authority comes from size and position, never from a heavier shadow than its neighbours.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Four Radii Rule",
+        "body": "8, 12, 16, full. There is no 4px, no 20px, no 24px. Cards render at 16px via .glass-card and pills at 8px via .glass-pill; markup must not restate a radius those classes already own.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Stroke Contract Rule",
+        "body": "Every icon is stroke-based at 2px with round caps and joins on a 24x24 viewport. Nothing filled, ever. The product cannot morph fill-based icons; the interface must not display what the engine cannot accept.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Same Physics Rule",
+        "body": "The interface eases the way the engine eases. cubic-bezier(0.34, 1.56, 0.64, 1) is the house curve; a linear or ease-in-out transition on a meaningful state change is off-brand in a literal sense.",
+        "section": "components"
+      },
+      {
+        "name": "The One Selected Thing Rule",
+        "body": "In every group - presets, spring configs, framework tabs - exactly one member is filled and lifted, and the rest are flat and white. Never zero, never two.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do treat Kinetic Green (#16a34a) as a state color. It marks live, selected, and in-motion. Reach for weight, size, or space when something merely needs emphasis.",
+      "Do separate surfaces with a 1px hairline (#e5e8ec) and let them sit flat. The resting shadow is 0 2px 6px rgba(17,19,23,0.06) and nothing heavier.",
+      "Do cap font weight at 700 (font-bold). Space Grotesk has nothing above it and the project loads nothing above it.",
+      "Do set every icon at 24x24, fill=none, stroke-width=2, round caps and joins - the same contract the engine requires of input icons.",
+      "Do use JetBrains Mono for every number, path, command, and machine-readable label, and Space Grotesk for everything a person wrote.",
+      "Do hold the 44px minimum on every interactive element, and get there with padding rather than by growing the 12px label.",
+      "Do design at two breakpoints - 640px and 1024px - and make each one earn its change.",
+      "Do ship every state in all nine languages and verify the layout survives CJK and Cyrillic.",
+      "Do give every state a non-motion carrier: text, color, and an ARIA announcement, so prefers-reduced-motion loses nothing but the animation."
+    ],
+    "donts": [
+      "Don't reintroduce the dark neon world. src/input.css and tailwind.config.js once described a #09090b ground with rgba(15,23,42,0.75) backdrop-blur glass and a 0 0 40px rgba(59,130,246,0.4) blue bloom; both have been rewritten to the bench. Nothing in this system is dark except a code panel, and no surface uses backdrop-filter.",
+      "Don't use emoji or Unicode glyphs as UI vocabulary. This is a page whose entire product is icons; every marker, category badge, caret, checkmark and status symbol is a drawn stroke icon obeying the Stroke Contract Rule. A pair-name arrow inside a label is text, not an icon, and is the one permitted exception.",
+      "Don't add a second accent family. Emerald (#059669) exists solely to distinguish the Wild preset category from the Traditional UI one; it is taxonomy, not palette.",
+      "Don't let a second element glow, and don't give the stage card a heavier shadow than the cards beside it. The specimen glow is the morphing SVG's alone; every card in the system shares one resting shadow.",
+      "Don't reach for gradient-and-glow SaaS energy - mesh backgrounds, floating orbs, purple-blue washes, oversized bloom. The .ambient-orb rule left in the stylesheet has no markup using it; leave it that way.",
+      "Don't write shouty. No font-extrabold, no exclamation copy, no ALL-CAPS beyond 12px eyebrows and control labels at 0.05em.",
+      "Don't invent a fifth radius. 8, 12, 16, full.",
+      "Don't put a dark surface anywhere except a code panel.",
+      "Don't apply green text below 4.5:1 - #16a34a on white is fine at 12px bold, but on Kinetic Green Wash use Kinetic Green Deep (#15803d).",
+      "Don't invent a bespoke active treatment for a toggle. Every on/selected control in this system resolves to the same thing: solid Kinetic Green fill, white label, 1px border, shadow-md. Status dots inside a control inherit currentColor so they stay legible in both states."
+    ]
+  }
+}

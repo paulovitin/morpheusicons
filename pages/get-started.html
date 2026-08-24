@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use npm packages like lucide-static, CDN icons, or Rust icondata crate with MorpheusIcons.">
+  <title>Using npm & Lucide Icons — MorpheusIcons</title>
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+  <!-- Tailwind CSS (production build) -->
+  <link rel="stylesheet" href="./dist/output.css">
+  <!-- Tailwind CDN fallback -->
+  <script>
+    (function() {
+      try {
+        const link = document.querySelector('link[href="./dist/output.css"]');
+        if (link && link.sheet && link.sheet.cssRules && link.sheet.cssRules.length > 0) return;
+      } catch(e) {}
+      const s = document.createElement('script');
+      s.src = 'https://cdn.tailwindcss.com';
+      s.onload = function() {
+        tailwind.config = {
+          darkMode: 'class',
+          theme: { extend: {
+            fontFamily: { sans: ['Space Grotesk', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+          }}
+        };
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+  <!-- impeccable:styles:start — generated from src/input.css, do not edit -->
+  <style>
+    /* --------------------------------------------------------------------------
+       The Physics Lab Bench — see DESIGN.md
+       SINGLE SOURCE OF TRUTH. The inline <style> block in index.html (the
+       no-build fallback) is generated from this file by `npm run sync:styles`.
+       Do not hand-edit the inline block.
+       -------------------------------------------------------------------------- */
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background-color: #ffffff;
+      color: #111317;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-card {
+      background: #ffffff;
+      border: 1px solid #e5e8ec;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(17, 19, 23, 0.06);
+    }
+    .glass-pill {
+      background: #ffffff;
+      border: 1px solid #e5e8ec;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f7f8fa;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c2c7cf;
+      border-radius: 9999px;
+    }
+
+    /* Accessibility: focus indicators. Kinetic Green Deep = 5.02:1 on white. */
+    :focus-visible {
+      outline: 2px solid #15803d;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    /* Range control: 8px visual track, 44px touch target (WCAG 2.5.8) */
+    .range-control {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 44px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .range-control::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+    }
+    .range-control::-moz-range-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+    }
+    .range-control::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      margin-top: -6px;
+      border-radius: 9999px;
+      background: #15803d;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(17, 19, 23, 0.28);
+    }
+    .range-control::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-radius: 9999px;
+      background: #15803d;
+      box-shadow: 0 1px 3px rgba(17, 19, 23, 0.28);
+    }
+    .range-control:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    /* --------------------------------------------------------------------------
+       Code panel syntax colours (see pages/syntax.js).
+       Two hues only: green carries structure (keywords, types, macros), amber
+       carries literals (strings, numbers). Everything else is neutral. Every
+       value below is measured against the #111827 panel and clears 4.5:1.
+       -------------------------------------------------------------------------- */
+    .tok-com { color: #8b96a8; font-style: italic; }   /* 5.94:1  */
+    .tok-key { color: #4ade80; }                        /* 10.18:1 */
+    .tok-mac { color: #86efac; }                        /* 12.63:1 */
+    .tok-att { color: #86efac; }                        /* 12.63:1 */
+    .tok-typ { color: #bbf7d0; }                        /* 14.64:1 */
+    .tok-str { color: #fcd34d; }                        /* 12.30:1 */
+    .tok-num { color: #fbbf24; }                        /* 10.63:1 */
+    .tok-pun { color: #9ca3af; }                        /*  6.99:1 */
+
+    /* --------------------------------------------------------------------------
+       Language picker. The native <select> sits invisibly over a quiet face so the
+       OS picker (and every assistive technology) still works, while the control
+       reads as chrome instead of competing with the primary actions beside it.
+       -------------------------------------------------------------------------- */
+    .lang-picker {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .lang-picker select {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .lang-picker-face {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 10px;
+      border-radius: 8px;
+      color: #4b5563;
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .lang-picker:hover .lang-picker-face {
+      background-color: #f7f8fa;
+      color: #111827;
+    }
+    .lang-picker:focus-within .lang-picker-face {
+      outline: 2px solid #15803d;
+      outline-offset: 2px;
+    }
+
+    /* Inline code chips in guide prose. Short class so the translation
+       dictionary stays readable, and 8px so they obey the Four Radii Rule. */
+    .gcode {
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+    }
+    .gcode-key {
+      color: #15803d;
+    }
+
+    /* Progressive disclosure: hidden sections */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .reveal-section.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Morph hover effect for nav icons */
+    .morph-hover svg path {
+      transition: d 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    /* Fallback for browsers that don't support CSS d property transitions */
+    @supports not (d: path("M0 0")) {
+      .morph-hover:hover svg {
+        transform: scale(1.05);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+    }
+
+    /* Hide ambient orbs on small screens to prevent GPU jank */
+    @media (max-width: 639px) {
+      .ambient-orb { display: none; }
+    }
+
+    /* Static fallback crossfade animation */
+    @keyframes staticMorphCrossfade {
+      0%, 40% { opacity: 1; }
+      50%, 90% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .static-morph-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .static-morph-a { animation: staticMorphCrossfade 4s ease-in-out infinite; }
+    .static-morph-b { animation: staticMorphCrossfade 4s ease-in-out infinite; animation-delay: -2s; }
+
+    /* --------------------------------------------------------------------------
+       Reduced motion. Targeted, not a blanket kill: we stop looping/decorative
+       motion and the large travel-and-fade reveals, but KEEP short state
+       transitions (colour, border, shadow) because those are feedback, not
+       decoration. Removing them would make the UI feel broken, not calmer.
+       -------------------------------------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      /* Looping / ambient motion: off entirely */
+      .animate-pulse,
+      .animate-pulse-slow,
+      .animate-spin-slow,
+      .ambient-orb {
+        animation: none !important;
+      }
+
+      /* Entrance animations: land at their final state immediately */
+      .animate-morph-in,
+      .animate-spring-reveal {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .reveal-section {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      /* Path morphing is the product demo; the JS already switches to a
+         side-by-side static view, so the CSS interpolation just stops. */
+      .morph-hover svg path {
+        transition: none;
+      }
+
+      /* Static fallback: show both icons instead of crossfading */
+      .static-morph-icon { position: static; }
+      .static-morph-a, .static-morph-b { animation: none; opacity: 1; }
+
+      /* Anything still moving is capped, but state feedback survives. */
+      *, *::before, *::after {
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+    }
+  </style>
+  <!-- impeccable:styles:end -->
+  <script src="lang.js" defer></script>
+  <script src="guide-i18n.js" defer></script>
+  <script src="syntax.js" defer></script>
+</head>
+<body class="min-h-screen relative selection:bg-green-500/20 selection:text-green-900">
+
+  <!-- Skip to main content -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[99999] focus:px-4 focus:py-2 focus:bg-green-700 focus:text-white focus:rounded-lg focus:text-sm focus:font-bold">
+    <span data-chrome="skipToContent">Skip to main content</span>
+  </a>
+
+  <!-- Header / Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+      
+      <a href="index.html" class="flex items-center gap-3 min-w-0 min-h-[44px] group focus:outline-none">
+        <div class="relative w-9 h-9 shrink-0 flex items-center justify-center">
+          <svg class="w-9 h-9 text-green-700 group-hover:rotate-12 transition-transform duration-500" viewBox="0 0 100 100" aria-hidden="true">
+            <path fill="url(#rustGradHeader)" d="M 50 10 L 55 18 A 36 36 0 0 1 67 22 L 75 17 L 80 25 L 73 31 A 36 36 0 0 1 77 44 L 85 47 L 83 56 L 75 57 A 36 36 0 0 1 70 69 L 75 77 L 68 83 L 61 77 A 36 36 0 0 1 48 80 L 45 88 L 36 86 L 36 78 A 36 36 0 0 1 24 72 L 17 78 L 11 71 L 17 64 A 36 36 0 0 1 13 51 L 5 48 L 7 39 L 15 39 A 36 36 0 0 1 21 27 L 15 20 L 22 14 L 29 19 A 36 36 0 0 1 42 14 Z"/>
+            <circle cx="50" cy="50" r="28" fill="#ffffff" stroke="#15803d" stroke-width="2"/>
+            <path d="M 34 62 L 34 38 L 50 54 L 66 38 L 66 62" fill="none" stroke="#15803d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="rustGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#15803d" />
+                <stop offset="100%" stop-color="#166534" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <span class="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2 min-w-0">
+            <span class="sr-only sm:not-sr-only whitespace-nowrap">MorpheusIcons</span>
+            <span class="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 font-mono whitespace-nowrap" data-chrome="guideBadge">Get Started Guide</span>
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav aria-label="Main navigation" class="flex items-center gap-2 sm:gap-4 shrink-0">
+        <!-- Language Selector -->
+        <div class="lang-picker">
+          <label for="lang-select" class="sr-only" data-lang-label>Language</label>
+          <select id="lang-select"></select>
+          <span class="lang-picker-face text-xs font-semibold" aria-hidden="true">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            <span data-lang-code>EN</span>
+            <svg class="w-3 h-3 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </div>
+        <a href="index.html" aria-label="Studio" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[44px] min-w-[44px] shrink-0 text-xs font-semibold text-gray-600 hover:text-green-800 rounded-xl transition-colors">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span class="hidden sm:inline" data-chrome="navStudio">Studio</span>
+        </a>
+        <a href="get-started.html" aria-current="page" aria-label="Get Started" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[44px] min-w-[44px] shrink-0 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-xl">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+          <span class="hidden sm:inline" data-chrome="navGetStarted">Get Started</span>
+        </a>
+        <a href="llms.txt" class="hidden sm:inline-flex items-center min-h-[44px] px-3 py-2 text-xs font-semibold text-gray-600 hover:text-green-800 transition-colors font-mono">
+          llms.txt
+        </a>
+        <a href="https://github.com/rust-ui/ui" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub" class="px-3 py-2 text-xs font-semibold rounded-xl shrink-0 min-w-[44px] justify-center bg-green-700 hover:bg-green-800 text-white transition-all shadow-sm flex items-center gap-1.5 min-h-[44px]">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main id="main-content" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+    
+    <!-- Hero Header -->
+    <div class="space-y-4 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 border border-green-200 text-green-700">
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> <span data-guide="badge">Bring Your Own Icons — icondata, Lucide, Heroicons, Tabler & Phosphor</span></div>
+      <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-gray-900 leading-tight" data-guide="heroTitle">
+        Using <span class="text-green-700">Lucide via Cargo, npm or lucide.dev</span> in Any Project
+      </h1>
+      <p class="text-gray-600 text-sm sm:text-base max-w-3xl" data-guide="heroDesc">
+        MorpheusIcons works with <strong>any icon library from Cargo crates, npm, or lucide.dev</strong>. Start with the Rust crate <code class="gcode">icondata</code>, or load SVGs from npm packages like <code class="gcode">lucide-static</code> and fetch them from a CDN.
+      </p>
+
+      <!-- Quick Nav Pills -->
+      <div class="flex flex-wrap items-center gap-2 pt-2">
+        <span class="text-xs font-bold text-gray-600 uppercase tracking-wider mr-1" data-guide="jumpLabel">Jump to:</span>
+        <a href="#rust-icondata" class="inline-flex items-center min-h-[44px] px-3 py-2.5 text-xs font-semibold rounded-lg bg-green-100 text-green-800 transition-colors" data-guide="jump1">Rust icondata crate</a>
+        <a href="#npm-lucide" class="inline-flex items-center min-h-[44px] px-3 py-2.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-800 transition-colors">npm & Lucide JS</a>
+        <a href="#lucide-dev" class="inline-flex items-center min-h-[44px] px-3 py-2.5 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-green-100 hover:text-green-800 text-gray-700 transition-colors">lucide.dev SVGs</a>
+        <a href="#frameworks" class="inline-flex items-center min-h-[44px] px-3 py-2.5 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-green-100 hover:text-green-800 text-gray-700 transition-colors" data-guide="jump4">GUI Frameworks</a>
+      </div>
+    </div>
+
+    <!-- MAIN SECTION 1: Rust Crate icondata & lucide.dev -->
+    <section id="rust-icondata" class="glass-card p-6 sm:p-8 space-y-6 border-2 border-green-500/30">
+      <div class="flex items-start gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-green-700 to-green-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 9 3 3-3 3"/><path d="M13 15h3"/><rect width="20" height="16" x="2" y="4" rx="3"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900" data-guide="s1Title">1. Using Lucide in Rust via Cargo (<code class="font-mono">icondata</code>)</h2>
+          <p class="text-xs sm:text-sm text-gray-600" data-guide="s1Sub">Using the <code class="font-mono">icondata</code> Rust crate or <code class="font-mono">lucide.dev</code> site SVGs</p>
+        </div>
+      </div>
+
+      <!-- Option A: icondata crate -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+          <span class="shrink-0 mt-1 w-6 h-6 rounded-full bg-green-100 text-green-800 text-xs font-bold flex items-center justify-center">A</span>
+          <span class="min-w-0" data-guide="s1aTitle">Option A: Using the <code class="text-green-700 font-mono text-sm">icondata</code> Crate (Lucide, Heroicons, Tabler for Rust)</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600" data-guide="s1aIntro">
+          In Rust, the popular <code class="gcode gcode-key">icondata</code> crate packages Lucide, Heroicons, Tabler, and Phosphor icons into Rust constants:
+        </p>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="toml"># Cargo.toml
+[dependencies]
+icondata = "0.4"
+morpheusicons = "0.1"</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+
+        <p class="text-xs sm:text-sm text-gray-600" data-guide="s1aPass">Pass <code class="gcode">icondata</code> path data directly into MorpheusIcons:</p>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="rust">use icondata::{LuSun, LuMoon}; // Lucide icons from icondata crate
+use morpheusicons::prelude::*;
+
+fn main() {
+    // icondata provides SVG path string in .data field
+    let sun_path  = LuSun.data;
+    let moon_path = LuMoon.data;
+
+    let mut controller = MorphController::from_sources(
+        &sun_path,
+        &moon_path,
+        SpringConfig::BOUNCY,
+    ).unwrap();
+
+    controller.set_target(1.0); // Morph to Moon!
+    controller.update(0.016);
+}</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Option B: Copying from lucide.dev -->
+      <div id="lucide-dev" class="space-y-4 pt-4 border-t border-gray-200">
+        <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+          <span class="shrink-0 mt-1 w-6 h-6 rounded-full bg-green-100 text-green-800 text-xs font-bold flex items-center justify-center">B</span>
+          <span class="min-w-0" data-guide="s1bTitle">Option B: Copying Directly from <code class="text-green-700 font-mono text-sm">lucide.dev</code></span>
+        </h3>
+        <ol class="list-decimal list-inside space-y-1 text-xs sm:text-sm text-gray-700 leading-relaxed" data-guide="s1bSteps">
+          <li>Open <a href="https://lucide.dev/icons" target="_blank" rel="noopener noreferrer" class="text-green-700 font-bold hover:underline">lucide.dev/icons</a></li>
+          <li>Search for any icon (for example <code class="gcode">play</code>, <code class="gcode">pause</code>, <code class="gcode">sun</code>)</li>
+          <li>Click <strong>Copy SVG</strong>, or save the <code class="gcode">.svg</code> file into your project</li>
+          <li>Pass it through <code class="gcode gcode-key">icon_from_svg</code> to convert the full SVG</li>
+        </ol>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="rust">use morpheusicons::icons::svg_extract::icon_from_svg;
+use morpheusicons::prelude::*;
+
+// Load the .svg files saved straight from lucide.dev
+let play_svg  = icon_from_svg(include_str!("../assets/lucide/play.svg")).unwrap();
+let pause_svg = icon_from_svg(include_str!("../assets/lucide/pause.svg")).unwrap();
+
+let mut controller = MorphController::from_sources(&play_svg, &pause_svg, SpringConfig::SNAPPY).unwrap();</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN SECTION 2: npm & Web Integration (Lucide JS, lucide-static, CDN) -->
+    <section id="npm-lucide" class="glass-card p-6 sm:p-8 space-y-6">
+      <div class="flex items-start gap-3 border-b border-gray-200 pb-4">
+        <div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-green-700 to-green-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900" data-guide="s2Title">2. Using Lucide from npm in JavaScript / Web Apps</h2>
+          <p class="text-xs sm:text-sm text-gray-600" data-guide="s2Sub">Integrating <code class="font-mono">lucide-static</code> or Lucide CDN with MorpheusIcons WebAssembly</p>
+        </div>
+      </div>
+
+      <!-- Option A: npm lucide-static -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+          <span class="shrink-0 mt-1 w-6 h-6 rounded-full bg-green-100 text-green-800 text-xs font-bold flex items-center justify-center">A</span>
+          <span class="min-w-0" data-guide="s2aTitle">Option A: Using the <code class="text-green-700 font-mono text-sm">lucide-static</code> npm Package</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600" data-guide="s2aIntro">
+          Install the official <code class="gcode">lucide-static</code> package in your web project (Vite, Next.js, Webpack, etc.):
+        </p>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="sh">npm install lucide-static</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+
+        <p class="text-xs sm:text-sm text-gray-600" data-guide="s2aThen">Then import Lucide icon paths and feed them directly into MorpheusIcons:</p>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="js">import init, { WasmMorphController } from './pkg/morpheusicons.js';
+
+// Import raw SVG strings from lucide-static in Vite/Webpack
+import sunSvg from 'lucide-static/icons/sun.svg?raw';
+import moonSvg from 'lucide-static/icons/moon.svg?raw';
+
+await init();
+
+// Extract path d="..." string or pass path directly
+const sunPath  = "M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z";
+const moonPath = "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z";
+
+// Create WASM controller (startPath, targetPath, springPreset)
+const controller = new WasmMorphController(sunPath, moonPath, "bouncy");
+
+// Trigger morph animation to Moon (t=1.0)
+controller.morphToEnd();
+
+// Animation frame loop (60fps)
+function animate(dtSeconds) {
+  const isAnimating = controller.update(dtSeconds);
+  
+  // Set calculated continuous SVG path
+  document.getElementById('icon-path').setAttribute('d', controller.currentSvgPath());
+
+  if (isAnimating) requestAnimationFrame(animate);
+}</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Option B: CDN Fetching -->
+      <div class="space-y-4 pt-4 border-t border-gray-200">
+        <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+          <span class="shrink-0 mt-1 w-6 h-6 rounded-full bg-green-100 text-green-800 text-xs font-bold flex items-center justify-center">B</span>
+          <span class="min-w-0" data-guide="s2bTitle">Option B: Fetching Lucide Icons Dynamically from CDN (unpkg / jsDelivr)</span>
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600" data-guide="s2bIntro">
+          No build tools required! You can fetch any icon dynamically from Lucide's CDN:
+        </p>
+
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="js">// Fetch raw SVG files for any Lucide icon directly from unpkg CDN
+const [sunSvg, moonSvg] = await Promise.all([
+  fetch('https://unpkg.com/lucide-static@latest/icons/sun.svg').then(r => r.text()),
+  fetch('https://unpkg.com/lucide-static@latest/icons/moon.svg').then(r => r.text())
+]);
+
+// Extract d="..." attribute using simple regex
+const extractD = (svg) => svg.match(/d="([^"]+)"/)?.[1] || "";
+
+const controller = new WasmMorphController(
+  extractD(sunSvg),
+  extractD(moonSvg),
+  "gentle"
+);</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: GUI Framework Integration Examples -->
+    <section id="frameworks" class="space-y-6">
+      <div class="flex items-start gap-3 border-b border-gray-200 pb-4">
+        <div class="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center font-bold text-sm">3</div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900" data-guide="s3Title">GUI Framework Integration Examples</h2>
+          <p class="text-xs text-gray-600" data-guide="s3Sub">Ready-to-copy code snippets for GPUI, egui, Iced, Leptos, Dioxus & WASM</p>
+        </div>
+      </div>
+
+      <!-- GPUI (Zed) -->
+      <div id="gpui" class="glass-card p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+            <span class="shrink-0 mt-1 w-3 h-3 rounded-full bg-green-700"></span>
+            <span class="min-w-0" data-guide="fwGpui">GPUI (Zed Editor Framework)</span>
+          </h3>
+          <span class="text-xs px-2.5 py-1 bg-green-50 text-green-700 font-mono font-bold rounded-lg border border-green-200">feature = "gpui"</span>
+        </div>
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="rust">use gpui::*;
+use morpheusicons::integrations::gpui::MorphIcon;
+use morpheusicons::prelude::*;
+
+struct AppView {
+    morph_ctrl: MorphController,
+}
+
+impl Render for AppView {
+    fn render(&mut self, _cx: &mut ViewContext&lt;Self&gt;) -> impl IntoElement {
+        div()
+            .flex()
+            .items_center()
+            .justify_center()
+            .child(
+                MorphIcon::new(&self.morph_ctrl)
+                    .size(px(32.0))
+                    .stroke_color(rgb(0x16a34a))
+                    .stroke_width(2.0)
+            )
+    }
+}</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- egui -->
+      <div id="egui" class="glass-card p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+            <span class="shrink-0 mt-1 w-3 h-3 rounded-full bg-blue-500"></span>
+            <span class="min-w-0" data-guide="fwEgui">egui Immediate-Mode UI</span>
+          </h3>
+          <span class="text-xs px-2.5 py-1 bg-blue-50 text-blue-700 font-mono font-bold rounded-lg border border-blue-200">feature = "egui"</span>
+        </div>
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="rust">use egui::Ui;
+use morpheusicons::integrations::egui::show_morph_icon;
+use morpheusicons::prelude::*;
+
+fn draw_icon(ui: &mut Ui, ctrl: &MorphController) {
+    show_morph_icon(ui, ctrl, 36.0, egui::Color32::from_rgb(22, 163, 74));
+}</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Leptos -->
+      <div id="leptos" class="glass-card p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900 flex items-start gap-2">
+            <span class="shrink-0 mt-1 w-3 h-3 rounded-full bg-purple-500"></span>
+            <span class="min-w-0" data-guide="fwLeptos">Leptos Reactive Web Components</span>
+          </h3>
+          <span class="text-xs px-2.5 py-1 bg-purple-50 text-purple-700 font-mono font-bold rounded-lg border border-purple-200">feature = "leptos"</span>
+        </div>
+        <div class="relative group">
+          <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto"><code data-lang="rust">use leptos::*;
+use morpheusicons::integrations::leptos::MorpheusIcon;
+use morpheusicons::prelude::*;
+
+#[component]
+pub fn PlayPauseButton() -> impl IntoView {
+    let (progress, set_progress) = create_signal(0.0);
+
+    view! {
+        &lt;button on:click=move |_| set_progress.update(|p| *p = 1.0 - *p)&gt;
+            &lt;MorpheusIcon
+                source=Icon::Play
+                target=Icon::Pause
+                progress=progress
+                config=SpringConfig::BOUNCY
+                size=32.0
+            /&gt;
+        &lt;/button&gt;
+    }
+}</code></pre>
+          <button onclick="copyCode(this)" aria-label="Copy code to clipboard" class="absolute top-3 right-3 px-3 py-2 min-h-[44px] bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span data-chrome="copy">Copy</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 mt-16 bg-gray-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-600">
+      <div class="flex items-center gap-2">
+        <span data-chrome="footerLicense">MorpheusIcons — MIT / Apache 2.0 License. Built for the Rust &amp; Web UI community.</span>
+      </div>
+      <nav aria-label="Footer" class="flex flex-wrap items-center justify-center gap-x-4">
+        <a href="index.html" class="inline-flex items-center min-h-[44px] px-1 hover:text-green-800 font-medium" data-chrome="navStudio">Studio</a>
+        <a href="get-started.html" aria-current="page" class="inline-flex items-center min-h-[44px] px-1 hover:text-green-800 text-green-700 font-bold" data-chrome="navGetStarted">Get Started</a>
+        <a href="llms.txt" class="inline-flex items-center min-h-[44px] px-1 hover:text-green-800 font-mono">llms.txt</a>
+        <a href="https://github.com/rust-ui/ui" target="_blank" rel="noopener noreferrer" class="inline-flex items-center min-h-[44px] px-1 hover:text-green-800">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const codeBlock = btn.parentElement.querySelector('code');
+      if (!codeBlock) return;
+      navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+        const label = btn.querySelector('span');
+        label.innerText = window.MorphLang ? window.MorphLang.t('copied') : 'Copied!';
+        btn.classList.add('bg-green-700', 'text-white');
+        setTimeout(() => {
+          label.innerText = window.MorphLang ? window.MorphLang.t('copy') : 'Copy';
+          btn.classList.remove('bg-green-700', 'text-white');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

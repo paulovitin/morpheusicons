@@ -1,0 +1,78 @@
+name: ✨ Feature Request
+description: Suggest an idea or enhancement for MorpheusIcons
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! We'd love to hear your ideas.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: What problem does this feature solve? Is there a use case you're trying to support?
+      placeholder: I want to morph icons from [library X] but currently...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this to work? Include API sketches, code examples, or diagrams if helpful.
+      placeholder: |
+        ```rust
+        // Ideal API usage:
+        let icon = SomeLibrary::icon_name();
+        let ctrl = MorphController::from_sources(&icon, &other, config)?;
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered other approaches? What are the tradeoffs?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of MorpheusIcons does this relate to?
+      multiple: true
+      options:
+        - Core engine (animation/geometry)
+        - Icon sources / IconSource trait
+        - SVG parsing & extraction
+        - Validation & compatibility
+        - GPUI integration
+        - egui integration
+        - Iced integration
+        - Leptos integration
+        - Dioxus integration
+        - WebAssembly / WASM
+        - Documentation
+        - CI / Tooling
+        - Other
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you be willing to help implement this?
+      options:
+        - label: I'd be willing to submit a PR for this feature
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or references.
+    validations:
+      required: false

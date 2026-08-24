@@ -1,0 +1,17 @@
+{
+  "name": "morpheusicons-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web demo for MorpheusIcons — Physics-based icon morphing",
+  "scripts": {
+    "build:css": "node scripts/sync-styles.mjs && tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "watch:css": "node scripts/sync-styles.mjs && tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build:site": "make site",
+    "build": "make site",
+    "sync:styles": "node scripts/sync-styles.mjs",
+    "assemble": "make assemble"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

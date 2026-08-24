@@ -1,0 +1,26 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Impeccable Design Check",
+      "trigger": "PostToolUse",
+      "description": "Runs Impeccable design checks after file edits",
+      "matcher": "fs_write|str_replace|fs_append",
+      "action": {
+        "type": "command",
+        "command": "[ ! -f '/Users/paulo/.agents/skills/impeccable/scripts/hook.mjs' ] || node '/Users/paulo/.agents/skills/impeccable/scripts/hook.mjs'",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "Impeccable Design Deep Pass",
+      "trigger": "Stop",
+      "description": "Runs Impeccable deep design pass at end of session",
+      "action": {
+        "type": "command",
+        "command": "[ ! -f '/Users/paulo/.agents/skills/impeccable/scripts/hook.mjs' ] || node '/Users/paulo/.agents/skills/impeccable/scripts/hook.mjs'",
+        "timeout": 30
+      }
+    }
+  ]
+}

@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Physics-based vector icon morphing engine for Rust GUI frameworks (GPUI, egui, Iced, Leptos, Dioxus) and WebAssembly. Spring physics, 2D Procrustes Analysis, 60fps.">
+  <meta property="og:title" content="MorpheusIcons — Physics-Based Icon Morphing for Rust & Web">
+  <meta property="og:description" content="Smooth vector icon transitions powered by spring physics oscillators and 2D Procrustes geometry. Works with GPUI, egui, Iced, Leptos, Dioxus.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="./assets/examples/sun_to_moon_midpoint.svg.png">
+  <meta name="twitter:image" content="./assets/examples/sun_to_moon_midpoint.svg.png">
+  <title>MorpheusIcons — Universal Physics Icon Morphing for Rust & Web</title>
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+
+  <!-- Tailwind CSS (production build) -->
+  <link rel="stylesheet" href="./dist/output.css">
+  <!-- Tailwind CDN fallback for development when dist/output.css is unavailable -->
+  <script>
+    (function() {
+      try {
+        const link = document.querySelector('link[href="./dist/output.css"]');
+        // Check synchronously if stylesheet loaded (won't have rules if 404)
+        if (link && link.sheet && link.sheet.cssRules && link.sheet.cssRules.length > 0) return;
+      } catch(e) { /* cross-origin or not loaded yet — fall through */ }
+      // Fallback: load CDN
+      const s = document.createElement('script');
+      s.src = 'https://cdn.tailwindcss.com';
+      s.onload = function() {
+        tailwind.config = {
+          darkMode: 'class',
+          theme: { extend: {
+            fontFamily: { sans: ['Space Grotesk', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            animation: { 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'spin-slow': 'spin 20s linear infinite', 'morph-in': 'morphIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' },
+            keyframes: { morphIn: { '0%': { opacity: '0', transform: 'scale(0.8) translateY(10px)' }, '100%': { opacity: '1', transform: 'scale(1) translateY(0)' } } }
+          }}
+        };
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+  <!-- impeccable:styles:start — generated from src/input.css, do not edit -->
+  <style>
+    /* --------------------------------------------------------------------------
+       The Physics Lab Bench — see DESIGN.md
+       SINGLE SOURCE OF TRUTH. The inline <style> block in index.html (the
+       no-build fallback) is generated from this file by `npm run sync:styles`.
+       Do not hand-edit the inline block.
+       -------------------------------------------------------------------------- */
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background-color: #ffffff;
+      color: #111317;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-card {
+      background: #ffffff;
+      border: 1px solid #e5e8ec;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(17, 19, 23, 0.06);
+    }
+    .glass-pill {
+      background: #ffffff;
+      border: 1px solid #e5e8ec;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f7f8fa;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c2c7cf;
+      border-radius: 9999px;
+    }
+
+    /* Accessibility: focus indicators. Kinetic Green Deep = 5.02:1 on white. */
+    :focus-visible {
+      outline: 2px solid #15803d;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    /* Range control: 8px visual track, 44px touch target (WCAG 2.5.8) */
+    .range-control {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 44px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .range-control::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+    }
+    .range-control::-moz-range-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+    }
+    .range-control::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      margin-top: -6px;
+      border-radius: 9999px;
+      background: #15803d;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(17, 19, 23, 0.28);
+    }
+    .range-control::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-radius: 9999px;
+      background: #15803d;
+      box-shadow: 0 1px 3px rgba(17, 19, 23, 0.28);
+    }
+    .range-control:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    /* --------------------------------------------------------------------------
+       Code panel syntax colours (see pages/syntax.js).
+       Two hues only: green carries structure (keywords, types, macros), amber
+       carries literals (strings, numbers). Everything else is neutral. Every
+       value below is measured against the #111827 panel and clears 4.5:1.
+       -------------------------------------------------------------------------- */
+    .tok-com { color: #8b96a8; font-style: italic; }   /* 5.94:1  */
+    .tok-key { color: #4ade80; }                        /* 10.18:1 */
+    .tok-mac { color: #86efac; }                        /* 12.63:1 */
+    .tok-att { color: #86efac; }                        /* 12.63:1 */
+    .tok-typ { color: #bbf7d0; }                        /* 14.64:1 */
+    .tok-str { color: #fcd34d; }                        /* 12.30:1 */
+    .tok-num { color: #fbbf24; }                        /* 10.63:1 */
+    .tok-pun { color: #9ca3af; }                        /*  6.99:1 */
+
+    /* --------------------------------------------------------------------------
+       Language picker. The native <select> sits invisibly over a quiet face so the
+       OS picker (and every assistive technology) still works, while the control
+       reads as chrome instead of competing with the primary actions beside it.
+       -------------------------------------------------------------------------- */
+    .lang-picker {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .lang-picker select {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .lang-picker-face {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 10px;
+      border-radius: 8px;
+      color: #4b5563;
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .lang-picker:hover .lang-picker-face {
+      background-color: #f7f8fa;
+      color: #111827;
+    }
+    .lang-picker:focus-within .lang-picker-face {
+      outline: 2px solid #15803d;
+      outline-offset: 2px;
+    }
+
+    /* Inline code chips in guide prose. Short class so the translation
+       dictionary stays readable, and 8px so they obey the Four Radii Rule. */
+    .gcode {
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+    }
+    .gcode-key {
+      color: #15803d;
+    }
+
+    /* Progressive disclosure: hidden sections */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .reveal-section.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Morph hover effect for nav icons */
+    .morph-hover svg path {
+      transition: d 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    /* Fallback for browsers that don't support CSS d property transitions */
+    @supports not (d: path("M0 0")) {
+      .morph-hover:hover svg {
+        transform: scale(1.05);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+    }
+
+    /* Hide ambient orbs on small screens to prevent GPU jank */
+    @media (max-width: 639px) {
+      .ambient-orb { display: none; }
+    }
+
+    /* Static fallback crossfade animation */
+    @keyframes staticMorphCrossfade {
+      0%, 40% { opacity: 1; }
+      50%, 90% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .static-morph-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .static-morph-a { animation: staticMorphCrossfade 4s ease-in-out infinite; }
+    .static-morph-b { animation: staticMorphCrossfade 4s ease-in-out infinite; animation-delay: -2s; }
+
+    /* --------------------------------------------------------------------------
+       Reduced motion. Targeted, not a blanket kill: we stop looping/decorative
+       motion and the large travel-and-fade reveals, but KEEP short state
+       transitions (colour, border, shadow) because those are feedback, not
+       decoration. Removing them would make the UI feel broken, not calmer.
+       -------------------------------------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      /* Looping / ambient motion: off entirely */
+      .animate-pulse,
+      .animate-pulse-slow,
+      .animate-spin-slow,
+      .ambient-orb {
+        animation: none !important;
+      }
+
+      /* Entrance animations: land at their final state immediately */
+      .animate-morph-in,
+      .animate-spring-reveal {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .reveal-section {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      /* Path morphing is the product demo; the JS already switches to a
+         side-by-side static view, so the CSS interpolation just stops. */
+      .morph-hover svg path {
+        transition: none;
+      }
+
+      /* Static fallback: show both icons instead of crossfading */
+      .static-morph-icon { position: static; }
+      .static-morph-a, .static-morph-b { animation: none; opacity: 1; }
+
+      /* Anything still moving is capped, but state feedback survives. */
+      *, *::before, *::after {
+        animation-iteration-count: 1 !important;
+        transition-duration: 150ms !important;
+      }
+    }
+  </style>
+  <!-- impeccable:styles:end -->
+  <script src="lang.js" defer></script>
+  <script src="syntax.js" defer></script>
+</head>
+<body class="min-h-screen relative selection:bg-green-500/20 selection:text-green-900">
+
+  <!-- Skip to main content (a11y) -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[99999] focus:px-4 focus:py-2 focus:bg-green-700 focus:text-white focus:rounded-lg focus:text-sm focus:font-bold">
+    <span data-chrome="skipToContent">Skip to main content</span>
+  </a>
+
+  <!-- WASM Loading Overlay -->
+  <div id="wasm-loader" role="alert" aria-live="polite" aria-label="Loading application" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white transition-opacity duration-500">
+    <div class="relative flex flex-col items-center gap-6">
+      <!-- Animated Rust Gear -->
+      <svg class="w-20 h-20 text-green-700 animate-spin-slow" viewBox="0 0 100 100" aria-hidden="true">
+        <path fill="currentColor" d="M 50 10 L 55 18 A 36 36 0 0 1 67 22 L 75 17 L 80 25 L 73 31 A 36 36 0 0 1 77 44 L 85 47 L 83 56 L 75 57 A 36 36 0 0 1 70 69 L 75 77 L 68 83 L 61 77 A 36 36 0 0 1 48 80 L 45 88 L 36 86 L 36 78 A 36 36 0 0 1 24 72 L 17 78 L 11 71 L 17 64 A 36 36 0 0 1 13 51 L 5 48 L 7 39 L 15 39 A 36 36 0 0 1 21 27 L 15 20 L 22 14 L 29 19 A 36 36 0 0 1 42 14 Z"/>
+        <circle cx="50" cy="50" r="22" fill="#ffffff"/>
+      </svg>
+
+      <!-- Loading Text -->
+      <div class="text-center space-y-2">
+        <h2 class="text-xl font-bold text-gray-900">MorpheusIcons</h2>
+        <p id="loader-status" class="text-sm text-gray-600 font-mono">Loading WASM engine...</p>
+      </div>
+
+      <!-- Framework Pills Cycling -->
+      <div class="flex flex-wrap items-center justify-center gap-2 max-w-xs" aria-hidden="true">
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">GPUI</span>
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">egui</span>
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">Iced</span>
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">Leptos</span>
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">Dioxus</span>
+        <span class="loader-pill px-3 py-1 text-xs font-bold rounded-full bg-green-50 text-green-700 border border-green-200 opacity-40">WebAssembly</span>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="w-48 h-1 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Loading progress">
+        <div id="loader-bar" class="h-full bg-gradient-to-r from-green-500 to-green-700 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+
+      <!-- Error / Retry (hidden until timeout) -->
+      <div id="wasm-error" class="hidden flex flex-col items-center gap-3 mt-4">
+        <p class="text-sm text-red-600 font-medium text-center max-w-xs">Failed to load the WASM engine. This may be due to network issues or browser compatibility.</p>
+        <button id="wasm-retry-btn" class="px-5 py-2.5 text-sm font-bold rounded-xl bg-green-700 hover:bg-green-800 text-white transition-all shadow-md min-h-[44px]">
+          Retry Loading
+        </button>
+        <button id="wasm-skip-btn" class="px-5 py-2.5 text-sm font-bold rounded-xl border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-green-400 transition-all min-h-[44px]">
+          View Static Demo
+        </button>
+        <p class="text-xs text-gray-600">Requires a modern browser with WebAssembly support.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Animate loader pills while WASM loads + timeout handling
+    (function() {
+      const pills = document.querySelectorAll('.loader-pill');
+      const statusEl = document.getElementById('loader-status');
+      const barEl = document.getElementById('loader-bar');
+      const progressContainer = barEl.parentElement;
+      const frameworks = ['GPUI (Zed)', 'egui', 'Iced', 'Leptos', 'Dioxus', 'WebAssembly'];
+      let idx = 0;
+      const interval = setInterval(() => {
+        pills.forEach((p, i) => p.style.opacity = i === idx ? '1' : '0.4');
+        statusEl.textContent = `Loading ${frameworks[idx]}...`;
+        barEl.style.width = `${((idx + 1) / frameworks.length) * 80}%`;
+        progressContainer.setAttribute('aria-valuenow', String(Math.round(((idx + 1) / frameworks.length) * 80)));
+        idx = (idx + 1) % frameworks.length;
+      }, 800);
+      window.__loaderInterval = interval;
+      window.__loaderBar = barEl;
+
+      // Focus trap: keep keyboard focus within the loader while it's visible
+      const loaderEl = document.getElementById('wasm-loader');
+      loaderEl.addEventListener('keydown', function(e) {
+        if (e.key !== 'Tab') return;
+        const focusable = loaderEl.querySelectorAll('button:not(.hidden button), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+
+      // Timeout: show error after 15 seconds
+      window.__loaderTimeout = setTimeout(() => {
+        window.__showLoaderError();
+      }, 15000);
+
+      window.__showLoaderError = function() {
+        clearInterval(window.__loaderInterval);
+        statusEl.textContent = 'Loading failed';
+        document.getElementById('wasm-error').classList.remove('hidden');
+        barEl.parentElement.classList.add('hidden');
+        document.querySelectorAll('.loader-pill').forEach(p => p.style.opacity = '0.2');
+        // Move focus to retry button for accessibility
+        setTimeout(() => document.getElementById('wasm-retry-btn').focus(), 100);
+      };
+    })();
+  </script>
+
+  <!-- Header / Navbar -->
+  <header id="site-header" inert class="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 sm:px-6 py-3.5" style="background-color: rgba(255,255,255,0.97)">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Logo & Brand Name -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="relative w-11 h-11 flex items-center justify-center morph-hover">
+          <svg class="w-11 h-11 text-green-700 animate-spin-slow" viewBox="0 0 100 100" aria-hidden="true">
+            <path fill="url(#rustGradHeader)" d="M 50 10 L 55 18 A 36 36 0 0 1 67 22 L 75 17 L 80 25 L 73 31 A 36 36 0 0 1 77 44 L 85 47 L 83 56 L 75 57 A 36 36 0 0 1 70 69 L 75 77 L 68 83 L 61 77 A 36 36 0 0 1 48 80 L 45 88 L 36 86 L 36 78 A 36 36 0 0 1 24 72 L 17 78 L 11 71 L 17 64 A 36 36 0 0 1 13 51 L 5 48 L 7 39 L 15 39 A 36 36 0 0 1 21 27 L 15 20 L 22 14 L 29 19 A 36 36 0 0 1 42 14 Z"/>
+            <circle cx="50" cy="50" r="28" fill="#ffffff" stroke="#15803d" stroke-width="2"/>
+            <path d="M 34 62 L 34 38 L 50 54 L 66 38 L 66 62" fill="none" stroke="#15803d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="rustGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#15803d" />
+                <stop offset="100%" stop-color="#166534" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-gray-900 flex items-center gap-2 min-w-0">
+            <span class="sr-only sm:not-sr-only whitespace-nowrap">MorpheusIcons</span>
+            <span class="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 font-mono">MIT / Apache 2.0</span>
+          </h1>
+          <p id="i18n-tagline" class="text-xs text-gray-600 font-medium hidden sm:block">Physics-Based Vector Icon Morphing for Rust & Web</p>
+        </div>
+      </div>
+
+      <!-- Controls: Language Selector & GitHub Link -->
+      <nav aria-label="Site navigation" class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- Language Selector -->
+        <div class="lang-picker">
+          <label for="lang-select" class="sr-only" data-lang-label>Language</label>
+          <select id="lang-select"></select>
+          <span class="lang-picker-face text-xs font-semibold" aria-hidden="true">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            <span data-lang-code>EN</span>
+            <svg class="w-3 h-3 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </div>
+
+        <a href="index.html" aria-current="page" aria-label="Studio" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[44px] min-w-[44px] shrink-0 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-xl">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span class="hidden sm:inline" data-chrome="navStudio">Studio</span>
+        </a>
+
+        <a href="get-started.html" aria-label="Get Started" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[44px] min-w-[44px] shrink-0 text-xs font-semibold text-gray-600 hover:text-green-800 rounded-xl transition-colors">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+          <span class="hidden sm:inline" data-chrome="navGetStarted">Get Started</span>
+        </a>
+
+        <a href="llms.txt" class="hidden sm:inline-flex items-center min-h-[44px] px-3 py-2 text-xs font-semibold text-gray-600 hover:text-green-800 transition-colors font-mono">
+          llms.txt
+        </a>
+
+        <a href="https://github.com/rust-ui/ui" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub" class="px-3.5 py-2.5 text-xs font-semibold rounded-xl shrink-0 bg-green-700 hover:bg-green-800 text-white transition-all shadow-[0_8px_28px_rgba(21,128,61,0.3)] flex items-center gap-1.5 min-h-[44px]">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" inert class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-10 sm:space-y-12">
+    
+    <!-- Hero Intro Banner -->
+    <div class="text-center max-w-3xl mx-auto space-y-4 animate-morph-in">
+      <div id="i18n-hero-pill" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-green-50 border border-green-200 text-green-700">
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg><span>Real-Time Vector Icon Morphing with Spring Physics</span>
+      </div>
+      <h2 id="i18n-hero-title" class="text-3xl sm:text-5xl font-bold tracking-tight text-gray-900 leading-tight">
+        Vector Icon Morphing Engine for <span class="text-green-700">Rust GUI & Web</span>
+      </h2>
+      <p id="i18n-hero-desc" class="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
+        Inspired by <strong>morphicons.com</strong>, MorpheusIcons recalculates vector geometry using 2D Procrustes Analysis and spring physics oscillators.
+      </p>
+      <!-- Inspiration credit -->
+      <a href="https://www.morphicons.com" target="_blank" rel="noopener noreferrer"
+         class="group inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold border border-gray-200 text-gray-600 hover:text-green-800 hover:border-green-300 transition-all duration-300 min-h-[44px]">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse" aria-hidden="true"></span>
+        <span id="i18n-credit">Inspired by <strong class="text-green-700 group-hover:underline">morphicons.com</strong></span><svg class="w-3 h-3 shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Interactive Morph Studio Stage -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+      
+      <!-- Stage Canvas (Center Large Display) -->
+      <div class="lg:col-span-7 glass-card p-6 sm:p-8 space-y-6 sm:space-y-8 relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <span id="i18n-stage-label" class="text-xs font-bold uppercase tracking-widest text-gray-600 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span>
+            Interactive Morph Stage
+          </span>
+          <span id="current-pair-label" class="text-sm font-bold text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200 font-mono" aria-live="polite">
+            Sun ⟷ Moon
+          </span>
+        </div>
+
+        <!-- Big SVG Icon Display Stage -->
+        <div class="relative min-h-[260px] sm:min-h-[300px] rounded-2xl bg-gray-50 border border-gray-200 flex flex-col items-center justify-center p-6 sm:p-8 group cursor-pointer transition-transform duration-300 hover:scale-[1.01]"
+             id="stage-card"
+             role="button"
+             tabindex="0"
+             aria-label="Toggle icon morph animation. Press Enter or Space to morph.">
+          <div class="absolute inset-0 bg-gradient-to-b from-green-500/5 to-green-700/5 rounded-2xl pointer-events-none" aria-hidden="true"></div>
+          
+          <!-- Animated SVG -->
+          <svg id="stage-svg" class="w-28 sm:w-36 h-28 sm:h-36 text-green-700 drop-shadow-[0_0_30px_rgba(21,128,61,0.3)] transition-all duration-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path id="stage-path" d=""/>
+          </svg>
+
+          <!-- Interactive Action Label -->
+          <p class="mt-4 sm:mt-6 text-sm font-bold text-gray-600 group-hover:text-gray-900 transition-colors flex items-center gap-2" aria-hidden="true">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span id="morph-btn-text">Click or press Space to morph → Moon</span>
+          </p>
+        </div>
+
+        <!-- Live Progress Scrub & Physics Control -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between text-xs font-semibold text-gray-600">
+            <label for="progress-slider" id="i18n-progress-title">Spring Progress (t)</label>
+            <span id="progress-val" class="font-mono text-green-700 text-sm font-bold" aria-live="off">0.0%</span>
+          </div>
+          <input type="range" id="progress-slider" min="0" max="100" value="0"
+                 aria-labelledby="i18n-progress-title"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+                 class="w-full range-control">
+          
+          <!-- Spring Settings & Auto Loop (always visible) -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+            <!-- Spring Mode Pills -->
+            <div class="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Spring configuration">
+              <span id="i18n-spring-title" class="w-full sm:w-auto text-xs font-semibold text-gray-600 sm:mr-2">Spring Settings</span>
+              <button data-spring="bouncy" role="radio" aria-checked="true" class="spring-btn inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-lg bg-green-700 text-white border border-green-700 shadow-md transition-all min-h-[44px]"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>BOUNCY</span></button>
+              <button data-spring="gentle" role="radio" aria-checked="false" class="spring-btn inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-lg bg-white glass-pill text-gray-600 hover:text-gray-900 transition-all min-h-[44px]"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span>GENTLE</span></button>
+              <button data-spring="snappy" role="radio" aria-checked="false" class="spring-btn inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-lg bg-white glass-pill text-gray-600 hover:text-gray-900 transition-all min-h-[44px]"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg><span>SNAPPY</span></button>
+            </div>
+
+            <!-- Loop Auto Animation Toggle -->
+            <button id="loop-toggle" aria-pressed="true" class="px-4 py-2.5 text-xs font-bold rounded-lg bg-green-700 text-white border border-green-700 shadow-md transition-all flex items-center gap-2 min-h-[44px]">
+              <span id="loop-dot" class="w-2 h-2 rounded-full bg-current animate-pulse" aria-hidden="true"></span>
+              <span id="i18n-loop-btn">Auto Loop</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Presets & Selector Column (Right) — revealed after first morph interaction -->
+      <div id="presets-column" class="lg:col-span-5 space-y-6 reveal-section">
+        
+        <!-- Category 1: Traditional UI Components -->
+        <div class="glass-card p-5 sm:p-6 space-y-4">
+          <h3 id="i18n-ui-title" class="text-xs font-bold uppercase tracking-wider text-green-700 flex items-center gap-2">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>Traditional UI Pairs (Shadcn / rust-ui)</span>
+          </h3>
+          <div class="grid grid-cols-2 gap-2.5" id="ui-presets-grid" role="group" aria-label="Traditional icon pair presets"></div>
+        </div>
+
+        <!-- Category 2: Wild Unexpected Pairs -->
+        <div class="glass-card p-5 sm:p-6 space-y-4">
+          <h3 id="i18n-wild-title" class="text-xs font-bold uppercase tracking-wider text-green-700 flex items-center gap-2">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></svg><span>Wild &amp; Dynamic Pairs</span>
+          </h3>
+          <div class="grid grid-cols-2 gap-2.5" id="wild-presets-grid" role="group" aria-label="Wild icon pair presets"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Multi-Framework Code Showcase — revealed after interaction -->
+    <section id="code-generator" class="glass-card p-6 sm:p-8 space-y-6 reveal-section" aria-labelledby="i18n-framework-title">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-6">
+        <div>
+          <h3 id="i18n-framework-title" class="text-xl sm:text-2xl font-bold text-gray-900">Multi-Framework Rust Integration</h3>
+          <p id="i18n-framework-sub" class="text-xs text-gray-600 mt-1">Copy ready-to-use code for your favorite framework (GPUI, egui, Iced, Leptos, Dioxus)</p>
+        </div>
+        
+        <!-- Framework Tabs -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-gray-100 p-1.5 rounded-2xl border border-gray-200" role="tablist" aria-label="Framework selection">
+          <button id="tab-leptos" data-tab="leptos" role="tab" aria-selected="true" aria-controls="code-panel" class="tab-btn px-3.5 py-2.5 text-xs font-bold rounded-xl bg-green-700 text-white shadow-sm transition-all min-h-[44px]">Leptos</button>
+          <button id="tab-gpui" data-tab="gpui" role="tab" aria-selected="false" aria-controls="code-panel" class="tab-btn px-3.5 py-2.5 text-xs font-bold rounded-xl text-gray-600 hover:text-gray-900 transition-all min-h-[44px]">GPUI</button>
+          <button id="tab-egui" data-tab="egui" role="tab" aria-selected="false" aria-controls="code-panel" class="tab-btn px-3.5 py-2.5 text-xs font-bold rounded-xl text-gray-600 hover:text-gray-900 transition-all min-h-[44px]">egui</button>
+          <button id="tab-iced" data-tab="iced" role="tab" aria-selected="false" aria-controls="code-panel" class="tab-btn px-3.5 py-2.5 text-xs font-bold rounded-xl text-gray-600 hover:text-gray-900 transition-all min-h-[44px]">Iced</button>
+          <button id="tab-dioxus" data-tab="dioxus" role="tab" aria-selected="false" aria-controls="code-panel" class="tab-btn px-3.5 py-2.5 text-xs font-bold rounded-xl text-gray-600 hover:text-gray-900 transition-all min-h-[44px]">Dioxus</button>
+        </div>
+      </div>
+
+      <!-- Code Snippet Display -->
+      <div class="relative" id="code-panel" role="tabpanel" aria-labelledby="tab-leptos" aria-label="Code snippet">
+        <pre class="bg-gray-900 p-4 sm:p-6 rounded-2xl border border-gray-800 text-xs sm:text-sm text-gray-200 overflow-x-auto custom-scrollbar leading-relaxed max-w-full"><code id="code-block" data-lang="rust">cargo add morpheusicons --features leptos</code></pre>
+        <button id="copy-btn" aria-label="Copy code to clipboard" class="absolute top-3 right-3 sm:top-4 sm:right-4 px-3 py-2.5 text-xs font-bold rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white border border-gray-600 transition-all flex items-center gap-1.5 min-h-[44px]">
+          <svg id="copy-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="i18n-copy-text">Copy</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section id="quick-install" class="glass-card p-6 sm:p-8 space-y-6 reveal-section" aria-labelledby="quick-install-title">
+      <div class="text-center space-y-4">
+        <h3 id="quick-install-title" class="text-xl sm:text-2xl font-bold text-gray-900">Quick Install</h3>
+        <p class="text-sm text-gray-600 max-w-lg mx-auto">Add MorpheusIcons to your Rust project in seconds. Works with any GUI framework.</p>
+      </div>
+
+      <!-- Quick Install -->
+      <div class="max-w-xl mx-auto space-y-3">
+        <div class="relative">
+          <pre class="bg-gray-900 px-5 py-4 rounded-xl border border-gray-800 text-sm text-gray-200 font-mono overflow-x-auto"><code data-lang="sh">cargo add morpheusicons</code></pre>
+          <button id="copy-install-btn" aria-label="Copy install command" class="absolute top-2.5 right-3 inline-flex items-center justify-center px-3 py-2 text-xs font-bold rounded-lg min-w-[44px] bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white border border-gray-600 transition-all min-h-[44px]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <p class="text-xs text-gray-600 text-center">Then add a feature flag for your framework: <code class="text-green-700">--features leptos</code>, <code class="text-green-700">--features egui</code>, <code class="text-green-700">--features gpui</code>, <code class="text-green-700">--features iced</code>, or <code class="text-green-700">--features dioxus</code></p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a href="https://github.com/rust-ui/ui" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-5 py-3 text-sm font-bold rounded-xl bg-green-700 hover:bg-green-800 text-white transition-all shadow-[0_4px_14px_rgba(21,128,61,0.24)] min-h-[44px]">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Star on GitHub
+        </a>
+        <a href="get-started.html"
+           class="inline-flex items-center gap-2 px-5 py-3 text-sm font-bold rounded-xl border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-green-400 transition-all min-h-[44px]">
+          <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Get Started Guide
+        </a>
+        <a href="https://crates.io/crates/morpheusicons" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-5 py-3 text-sm font-bold rounded-xl border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-green-400 transition-all min-h-[44px]">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          crates.io
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer Credit Banner -->
+    <footer class="text-center py-8 text-sm text-gray-600 border-t border-gray-200 space-y-2">
+      <p id="i18n-footer-license">MorpheusIcons — MIT / Apache 2.0 License. Built for the Rust & Web UI community.</p>
+      <p id="i18n-footer-credit">Inspired by the original library <a href="https://www.morphicons.com" target="_blank" rel="noopener noreferrer" class="text-green-700 hover:underline">morphicons.com</a> by Guillermo López.</p>
+      <nav aria-label="Footer" class="flex flex-wrap items-center justify-center gap-x-4 text-xs">
+        <a href="index.html" aria-current="page" class="inline-flex items-center min-h-[44px] px-1 text-green-700 font-bold hover:text-green-800">Studio</a>
+        <a href="get-started.html" class="inline-flex items-center min-h-[44px] px-1 font-medium hover:text-green-800">Get Started</a>
+        <a href="llms.txt" class="inline-flex items-center min-h-[44px] px-1 font-mono hover:text-green-800">llms.txt</a>
+        <a href="https://github.com/rust-ui/ui" target="_blank" rel="noopener noreferrer" class="inline-flex items-center min-h-[44px] px-1 hover:text-green-800">GitHub</a>
+      </nav>
+    </footer>
+
+  </main>
+
+  <!-- Internationalization (i18n) & Engine Scripts -->
+  <script type="module">
+    import init, { WasmMorphController, getIconPath, listIcons, listPairs } from './pkg/morpheusicons.js';
+
+    // --------------------------------------------------------------------------
+    // 1. i18n Localization Dictionary (9 Languages)
+    // --------------------------------------------------------------------------
+    const I18N = {
+      en: {
+        tagline: "Physics-Based Vector Icon Morphing for Rust & Web",
+        heroPill: "Real-Time Vector Icon Morphing with Spring Physics",
+        heroTitle: "Vector Icon Morphing Engine for <span class=\"text-green-700 font-bold\">Rust GUI & Web</span>",
+        heroDesc: "Inspired by <strong>morphicons.com</strong>, MorpheusIcons recalculates vector geometry using 2D Procrustes Analysis and spring physics oscillators.",
+        credit: "Inspired by <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Interactive Morph Stage",
+        progressTitle: "Spring Progress (t)",
+        springTitle: "Spring Settings & Auto Loop",
+        loopBtn: "Auto Loop",
+        uiTitle: "Traditional UI Pairs (Shadcn / rust-ui)",
+        wildTitle: "Wild & Dynamic Pairs",
+        frameworkTitle: "Multi-Framework Rust Integration",
+        frameworkSub: "Copy ready-to-use code for your favorite framework (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Copy",
+        copiedText: "Copied!",
+        morphTo: "Click or press Space to morph →",
+        footerLicense: "MorpheusIcons — MIT / Apache 2.0 License. Built for the Rust & Web UI community.",
+        footerCredit: "Inspired by the original library <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> by Guillermo López."
+      },
+      pt: {
+        tagline: "Morphing de Ícones Vetoriais por Física para Rust & Web",
+        heroPill: "Transição Fluida com Física de Molas em Tempo Real",
+        heroTitle: "Morphing de Ícones Vetoriais para <span class=\"text-green-700 font-bold\">Rust GUI & Web</span>",
+        heroDesc: "Inspirado no <strong>morphicons.com</strong>, o MorpheusIcons recalcula a geometria vetorial usando Análise de Procrustes 2D e osciladores físicos de mola.",
+        credit: "Inspirado no <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Stage Interativo de Morphing",
+        progressTitle: "Progresso da Mola (t)",
+        springTitle: "Config. de Mola & Auto Loop",
+        loopBtn: "Auto Loop",
+        uiTitle: "Pares Tradicionais de UI (Shadcn / rust-ui)",
+        wildTitle: "Pares Inusitados e Dinâmicos",
+        frameworkTitle: "Integração Multi-Framework Rust",
+        frameworkSub: "Copie o código pronto para o seu framework favorito (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Copiar",
+        copiedText: "Copiado!",
+        morphTo: "Clique ou pressione Espaço para morph →",
+        footerLicense: "MorpheusIcons — Licença MIT / Apache 2.0. Desenvolvido para a comunidade Rust & Web UI.",
+        footerCredit: "Inspirado na biblioteca original <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> por Guillermo López."
+      },
+      es: {
+        tagline: "Morphing de Iconos Vectoriales Basado en Física para Rust y Web",
+        heroPill: "Transición Fluida con Física de Muelles en Tiempo Real",
+        heroTitle: "Morphing de Iconos Vectoriales para <span class=\"text-green-700 font-bold\">Rust GUI y Web</span>",
+        heroDesc: "Inspirado en <strong>morphicons.com</strong>, MorpheusIcons recalcula la geometría vectorial mediante Análisis de Procrustes 2D y osciladores físicos de muelle.",
+        credit: "Inspirado en <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Escenario Interactivo de Morphing",
+        progressTitle: "Progreso del Muelle (t)",
+        springTitle: "Config. de Muelle & Auto Loop",
+        loopBtn: "Auto Loop",
+        uiTitle: "Pares Tradicionales de UI (Shadcn / rust-ui)",
+        wildTitle: "Pares Dinámicos e Inesperados",
+        frameworkTitle: "Integración Multi-Framework Rust",
+        frameworkSub: "Copia código listo para tu framework favorito (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Copiar",
+        copiedText: "¡Copiado!",
+        morphTo: "Clic o presiona Espacio para morph →",
+        footerLicense: "MorpheusIcons — Licencia MIT / Apache 2.0. Creado para la comunidad de Rust & Web UI.",
+        footerCredit: "Inspirado en la biblioteca original <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> por Guillermo López."
+      },
+      fr: {
+        tagline: "Morphisme d'Icônes Vectorielles Basé sur la Physique pour Rust & Web",
+        heroPill: "Morphisme Vectoriel Fluide et Physique en Temps Réel",
+        heroTitle: "Morphisme Vectoriel d'Icônes pour <span class=\"text-green-700 font-bold\">Rust GUI & Web</span>",
+        heroDesc: "Inspiré par <strong>morphicons.com</strong>, MorpheusIcons recalcule la géométrie vectorielle avec l'Analyse Procruste 2D et des oscillateurs à ressort.",
+        credit: "Inspiré par <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Scène Interactive de Morphisme",
+        progressTitle: "Progression du Ressort (t)",
+        springTitle: "Config. Ressort & Auto Loop",
+        loopBtn: "Auto Loop",
+        uiTitle: "Paires d'UI Traditionnelles (Shadcn / rust-ui)",
+        wildTitle: "Paires Inattendues & Dynamiques",
+        frameworkTitle: "Intégration Multi-Framework Rust",
+        frameworkSub: "Copiez le code prêt pour votre framework préféré (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Copier",
+        copiedText: "Copié !",
+        morphTo: "Cliquez ou Espace pour morph →",
+        footerLicense: "MorpheusIcons — Licence MIT / Apache 2.0. Conçu pour la communauté Rust & Web UI.",
+        footerCredit: "Inspiré de la bibliothèque originale <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> par Guillermo López."
+      },
+      de: {
+        tagline: "Physikbasiertes Vektor-Icon-Morphing für Rust & Web",
+        heroPill: "Nahtloses Vektor-Morphing mit Feder-Physik in Echtzeit",
+        heroTitle: "Vektor-Icon-Morphing in Echtzeit für <span class=\"text-green-700 font-bold\">Rust GUI & Web</span>",
+        heroDesc: "Inspiriert von <strong>morphicons.com</strong> berechnet MorpheusIcons die Vektorgeometrie mithilfe von 2D-Prokrustes-Analyse und Federphysik neu.",
+        credit: "Inspiriert von <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Interaktive Morphing-Bühne",
+        progressTitle: "Feder-Fortschritt (t)",
+        springTitle: "Feder-Einstellungen & Auto Loop",
+        loopBtn: "Auto Loop",
+        uiTitle: "Traditionelle UI-Paare (Shadcn / rust-ui)",
+        wildTitle: "Ausgefallene & Dynamische Paare",
+        frameworkTitle: "Multi-Framework Rust Integration",
+        frameworkSub: "Kopieren Sie fertigen Code für Ihr Lieblings-Framework (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Kopieren",
+        copiedText: "Kopiert!",
+        morphTo: "Klicken oder Leertaste für Morph →",
+        footerLicense: "MorpheusIcons — MIT / Apache 2.0 Lizenz. Entwickelt für die Rust & Web UI Community.",
+        footerCredit: "Inspiriert von der ursprünglichen Bibliothek <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> von Guillermo López."
+      },
+      zh: {
+        tagline: "基于物理学的 Rust & Web 通用矢量图标形变",
+        heroPill: "实时弹簧物理效果流畅矢量动画",
+        heroTitle: "颠覆性的 <span class=\"text-green-700 font-bold\">Rust GUI 与 Web</span> 矢量图标动画",
+        heroDesc: "受 <strong>morphicons.com</strong> 启发，MorpheusIcons 利用 2D 普鲁克分析和弹簧物理振荡器实时计算矢量几何形变。",
+        credit: "受 <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong> 启发",
+        stageLabel: "交互式形变舞台",
+        progressTitle: "弹簧形变进度 (t)",
+        springTitle: "弹簧设置 & 自动循环",
+        loopBtn: "自动循环",
+        uiTitle: "传统 UI 组件对 (Shadcn / rust-ui)",
+        wildTitle: "动态与创意组合",
+        frameworkTitle: "Rust 多框架无缝集成",
+        frameworkSub: "复制代码直接用于您喜爱的框架 (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "复制",
+        copiedText: "已复制!",
+        morphTo: "点击或空格键进行形变 →",
+        footerLicense: "MorpheusIcons — MIT / Apache 2.0 开源协议。专为 Rust 与 Web UI 社区打造。",
+        footerCredit: "受 Guillermo López 的 <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> 原创项目启发。"
+      },
+      ja: {
+        tagline: "Rust & Web向け物理ベース汎用ベクターアイコンモーフィング",
+        heroPill: "バネ物理演算によるリアルタイムベクターアニメーション",
+        heroTitle: "<span class=\"text-green-700 font-bold\">Rust GUI & Web</span> のための革新的なベクター変形",
+        heroDesc: "<strong>morphicons.com</strong>に着想を得たMorpheusIconsは、2Dプロクラステス解析とバネ物理振動子を用いてリアルタイムにベクター形状を計算します。",
+        credit: "<strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>から着想",
+        stageLabel: "インタラクティブ・モーフィング・ステージ",
+        progressTitle: "バネ進行度 (t)",
+        springTitle: "バネ設定 & 自動ループ",
+        loopBtn: "自動ループ",
+        uiTitle: "伝統的なUIペア (Shadcn / rust-ui)",
+        wildTitle: "ユニーク＆ダイナミックペア",
+        frameworkTitle: "Rust マルチフレームワーク統合",
+        frameworkSub: "お気に入りのフレームワーク用コードをワンクリックでコピー (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "コピー",
+        copiedText: "コピー完了!",
+        morphTo: "クリックまたはスペースでモーフ →",
+        footerLicense: "MorpheusIcons — MIT / Apache 2.0 ライセンス。Rust & Web UI コミュニティのために開発。",
+        footerCredit: "Guillermo López氏のオリジナルライブラリ <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> にインスパイアされています。"
+      },
+      ko: {
+        tagline: "Rust 및 Web을 위한 물리 기반 범용 벡터 아이콘 모핑",
+        heroPill: "실시간 스프링 물리를 이용한 유연한 벡터 애니메이션",
+        heroTitle: "<span class=\"text-green-700 font-bold\">Rust GUI 및 Web</span>을 위한 혁신적인 벡터 모핑",
+        heroDesc: "<strong>morphicons.com</strong>에서 영감을 받은 MorpheusIcons는 2D 프로크루스테스 분석과 스프링 물리 진동자를 사용하여 실시간으로 벡터 형상을 계산합니다.",
+        credit: "<strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>에서 영감",
+        stageLabel: "대화형 모핑 스테이지",
+        progressTitle: "스프링 진행도 (t)",
+        springTitle: "스프링 설정 & 자동 루프",
+        loopBtn: "자동 루프",
+        uiTitle: "전통적인 UI 쌍 (Shadcn / rust-ui)",
+        wildTitle: "다이내믹 및 독특한 쌍",
+        frameworkTitle: "Rust 멀티 프레임워크 연동",
+        frameworkSub: "선호하는 프레임워크용 코드를 복사하여 바로 사용하세요 (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "복사",
+        copiedText: "복사됨!",
+        morphTo: "클릭 또는 스페이스바로 모핑 →",
+        footerLicense: "MorpheusIcons — MIT / Apache 2.0 라이선스. Rust & Web UI 커뮤니티를 위해 제작되었습니다.",
+        footerCredit: "Guillermo López의 <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> 프로젝트에서 영감을 받았습니다."
+      },
+      ru: {
+        tagline: "Физический векторный морфинг иконок для Rust и Web",
+        heroPill: "Плавная векторная анимация с пружинной физикой в реальном времени",
+        heroTitle: "Инновационный векторный морфинг для <span class=\"text-green-700 font-bold\">Rust GUI и Web</span>",
+        heroDesc: "Созданный под вдохновением от <strong>morphicons.com</strong>, MorpheusIcons пересчитывает векторную геометрию с помощью 2D-анализа Прокруста и пружинной физики.",
+        credit: "Вдохновлено <strong class=\"text-green-700 group-hover:underline\">morphicons.com</strong>",
+        stageLabel: "Интерактивная сцена морфинга",
+        progressTitle: "Прогресс пружины (t)",
+        springTitle: "Настройки пружины & Авто-цикл",
+        loopBtn: "Авто-цикл",
+        uiTitle: "Традиционные пары UI (Shadcn / rust-ui)",
+        wildTitle: "Динамические и необычные пары",
+        frameworkTitle: "Мульти-фреймворк интеграция Rust",
+        frameworkSub: "Скопируйте готовый код для вашего любимого фреймворка (GPUI, egui, Iced, Leptos, Dioxus)",
+        copyText: "Копировать",
+        copiedText: "Скопировано!",
+        morphTo: "Нажмите или Пробел для морфинга →",
+        footerLicense: "MorpheusIcons — Лицензия MIT / Apache 2.0. Создано для сообщества Rust & Web UI.",
+        footerCredit: "Вдохновлено оригинальной библиотекой <a href=\"https://www.morphicons.com\" target=\"_blank\" class=\"text-green-700 hover:underline\">morphicons.com</a> (автор: Guillermo López)."
+      }
+    };
+
+    // --------------------------------------------------------------------------
+    // 2. Presets (UI uses icon names, WASM provides the paths)
+    // --------------------------------------------------------------------------
+    const UI_PRESETS = [
+      { id: 'SunMoon', name: 'Sun ⟷ Moon', a: 'Sun', b: 'Moon' },
+      { id: 'PlayPause', name: 'Play ⟷ Pause', a: 'Play', b: 'Pause' },
+      { id: 'MenuX', name: 'Menu ⟷ Close', a: 'Menu', b: 'X' },
+      { id: 'LockUnlock', name: 'Lock ⟷ Unlock', a: 'Lock', b: 'Unlock' },
+      { id: 'EyeEyeOff', name: 'Eye ⟷ EyeOff', a: 'Eye', b: 'EyeOff' },
+      { id: 'VolumeMute', name: 'Volume ⟷ Mute', a: 'Volume2', b: 'VolumeX' }
+    ];
+
+    const WILD_PRESETS = [
+      { id: 'HeartTerminal', name: 'Heart ⟷ Terminal', a: 'Heart', b: 'Terminal' },
+      { id: 'CpuSun', name: 'CPU ⟷ Sun', a: 'Cpu', b: 'Sun' },
+      { id: 'BellCode', name: 'Bell ⟷ Code', a: 'Bell', b: 'Code' },
+      { id: 'MailZap', name: 'Mail ⟷ Zap', a: 'Mail', b: 'Zap' },
+      { id: 'TrashRefresh', name: 'Trash ⟷ Refresh', a: 'Trash', b: 'RefreshCw' },
+      { id: 'FolderStar', name: 'Folder ⟷ Star', a: 'Folder', b: 'Star' },
+      { id: 'UserLock', name: 'User ⟷ Lock', a: 'User', b: 'Lock' },
+      { id: 'CalendarPlay', name: 'Calendar ⟷ Play', a: 'Calendar', b: 'Play' }
+    ];
+
+    // --------------------------------------------------------------------------
+    // 3. Application State (WASM-backed)
+    // --------------------------------------------------------------------------
+    let currentLang = 'en';
+    let currentPreset = UI_PRESETS[0];
+    let isTarget = false;
+    let autoLoop = true;
+    let activeTab = 'leptos';
+    let currentSpring = 'bouncy';
+    let hasInteracted = false;
+    let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /** @type {WasmMorphController | null} */
+    let controller = null;
+
+    // Auto-detect language from browser
+    // Language detection, persistence and the picker itself live in lang.js so
+    // both pages share one control and one stored preference.
+    function detectLanguage() {
+      return window.MorphLang ? window.MorphLang.get() : 'en';
+    }
+
+    function applyLanguage(langKey) {
+      currentLang = langKey;
+      const dict = I18N[langKey] || I18N.en;
+
+      document.getElementById('i18n-tagline').innerText = dict.tagline;
+      document.getElementById('i18n-hero-pill').innerHTML = `<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg><span>${dict.heroPill}</span>`;
+      document.getElementById('i18n-hero-title').innerHTML = dict.heroTitle;
+      document.getElementById('i18n-hero-desc').innerHTML = dict.heroDesc;
+      document.getElementById('i18n-credit').innerHTML = dict.credit;
+      document.getElementById('i18n-stage-label').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span> ${dict.stageLabel}`;
+      document.getElementById('i18n-progress-title').innerText = dict.progressTitle;
+      document.getElementById('i18n-spring-title').innerText = dict.springTitle;
+      document.getElementById('i18n-loop-btn').innerText = dict.loopBtn;
+      document.getElementById('i18n-ui-title').innerHTML = `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>${dict.uiTitle}</span>`;
+      document.getElementById('i18n-wild-title').innerHTML = `<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></svg><span>${dict.wildTitle}</span>`;
+      document.getElementById('i18n-framework-title').innerText = dict.frameworkTitle;
+      document.getElementById('i18n-framework-sub').innerText = dict.frameworkSub;
+      document.getElementById('i18n-copy-text').innerText = dict.copyText;
+      document.getElementById('i18n-footer-license').innerText = dict.footerLicense;
+      document.getElementById('i18n-footer-credit').innerHTML = dict.footerCredit;
+
+      // document.documentElement.lang is owned by MorphLang.set().
+
+      updateStageView();
+    }
+
+    // Progressive disclosure: reveal sections after first interaction
+    function revealSections() {
+      if (hasInteracted) return;
+      hasInteracted = true;
+      document.querySelectorAll('.reveal-section').forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), i * 150);
+      });
+    }
+
+    function loadPreset(preset) {
+      currentPreset = preset;
+      isTarget = false;
+
+      const pathA = getIconPath(preset.a);
+      const pathB = getIconPath(preset.b);
+
+      if (controller) controller.free();
+      controller = new WasmMorphController(pathA, pathB, currentSpring);
+
+      document.getElementById('current-pair-label').innerText = preset.name;
+      updateStageView();
+      updateCodeBlock();
+      highlightActivePresetButton(preset.id);
+    }
+
+    function toggleMorph() {
+      if (!controller) return;
+      isTarget = !isTarget;
+      controller.toggle();
+      requestLoop();
+      revealSections();
+    }
+
+    function updateStageView() {
+      if (!controller) return;
+      const progress = controller.progress();
+      const svgD = controller.currentSvgPath();
+      document.getElementById('stage-path').setAttribute('d', svgD);
+
+      // A bouncy spring overshoots, so progress can read past 1.0. The visible
+      // readout shows that honestly; the slider and aria-valuenow must not,
+      // because aria-valuenow outside [valuemin, valuemax] is invalid ARIA.
+      const pct = (progress * 100).toFixed(1);
+      document.getElementById('progress-val').innerText = `${pct}%`;
+      const clamped = Math.min(100, Math.max(0, Math.round(progress * 100)));
+      const slider = document.getElementById('progress-slider');
+      slider.value = clamped;
+      slider.setAttribute('aria-valuenow', String(clamped));
+      slider.setAttribute('aria-valuetext', `${pct}%`);
+
+      const dict = I18N[currentLang] || I18N.en;
+      const targetName = isTarget ? currentPreset.a : currentPreset.b;
+      document.getElementById('morph-btn-text').innerText = `${dict.morphTo} ${targetName}`;
+    }
+
+    // --------------------------------------------------------------------------
+    // 4. Render Preset Grids & Event Listeners
+    // --------------------------------------------------------------------------
+    function renderPresetGrids() {
+      const uiGrid = document.getElementById('ui-presets-grid');
+      const wildGrid = document.getElementById('wild-presets-grid');
+
+      uiGrid.innerHTML = UI_PRESETS.map(p => `
+        <button id="preset-${p.id}" data-preset-id="${p.id}"
+                class="preset-btn px-3 py-3 text-xs font-semibold rounded-lg text-left transition-all duration-200 bg-white glass-pill text-gray-600 hover:text-gray-900 hover:border-green-400 flex items-center justify-between min-h-[44px]"
+                aria-label="Load ${p.name} icon pair">
+          <span>${p.name}</span>
+          <svg class="w-3.5 h-3.5 shrink-0 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      `).join('');
+
+      wildGrid.innerHTML = WILD_PRESETS.map(p => `
+        <button id="preset-${p.id}" data-preset-id="${p.id}"
+                class="preset-btn px-3 py-3 text-xs font-semibold rounded-lg text-left transition-all duration-200 bg-white glass-pill text-gray-600 hover:text-gray-900 hover:border-green-400 flex items-center justify-between min-h-[44px]"
+                aria-label="Load ${p.name} icon pair">
+          <span>${p.name}</span>
+          <svg class="w-3.5 h-3.5 shrink-0 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      `).join('');
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.presetId;
+          const p = [...UI_PRESETS, ...WILD_PRESETS].find(item => item.id === id);
+          if (p) {
+            loadPreset(p);
+            revealSections();
+          }
+        });
+      });
+    }
+
+    function highlightActivePresetButton(id) {
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.classList.remove('bg-green-700', 'text-white', 'border', 'border-green-700', 'shadow-lg');
+        btn.classList.add('bg-white', 'glass-pill', 'text-gray-600');
+      });
+      const activeBtn = document.getElementById(`preset-${id}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white', 'glass-pill', 'text-gray-600');
+        activeBtn.classList.add('bg-green-700', 'text-white', 'border', 'border-green-700', 'shadow-lg');
+      }
+    }
+
+    // The picker writes the preference; this page reacts by re-rendering.
+    document.addEventListener('morphlang:change', (e) => {
+      applyLanguage(e.detail.lang);
+    });
+
+    // Stage Click & Keyboard Listener
+    const stageCard = document.getElementById('stage-card');
+    stageCard.addEventListener('click', toggleMorph);
+    stageCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMorph();
+      }
+    });
+
+    // Progress Slider Manual Override
+    document.getElementById('progress-slider').addEventListener('input', (e) => {
+      if (!controller) return;
+      const val = parseFloat(e.target.value) / 100;
+      controller.setProgress(val);
+      isTarget = val > 0.5;
+      updateStageView();
+      requestLoop();
+      revealSections();
+    });
+
+    // Spring Config Button Listeners
+    document.querySelectorAll('.spring-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.spring-btn').forEach(b => {
+          b.classList.remove('bg-green-700', 'text-white', 'border', 'border-green-700', 'shadow-md');
+          b.classList.add('bg-white', 'glass-pill', 'text-gray-600');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.remove('bg-white', 'glass-pill', 'text-gray-600');
+        btn.classList.add('bg-green-700', 'text-white', 'border', 'border-green-700', 'shadow-md');
+        btn.setAttribute('aria-checked', 'true');
+
+        currentSpring = btn.dataset.spring;
+        if (controller) controller.setSpring(currentSpring);
+        requestLoop();
+      });
+    });
+
+    // Loop Toggle
+    document.getElementById('loop-toggle').addEventListener('click', () => {
+      autoLoop = !autoLoop;
+      if (autoLoop) requestLoop();
+      const toggleBtn = document.getElementById('loop-toggle');
+      const loopDot = document.getElementById('loop-dot');
+      toggleBtn.setAttribute('aria-pressed', String(autoLoop));
+      if (autoLoop) {
+        toggleBtn.classList.remove('bg-white', 'text-gray-600', 'border-gray-300', 'hover:bg-gray-50', 'hover:text-gray-900');
+        toggleBtn.classList.add('bg-green-700', 'text-white', 'border-green-700', 'shadow-md');
+        loopDot.classList.remove('opacity-60');
+        loopDot.classList.add('animate-pulse');
+      } else {
+        toggleBtn.classList.remove('bg-green-700', 'text-white', 'border-green-700', 'shadow-md');
+        toggleBtn.classList.add('bg-white', 'text-gray-600', 'border-gray-300', 'hover:bg-gray-50', 'hover:text-gray-900');
+        loopDot.classList.remove('animate-pulse');
+        loopDot.classList.add('opacity-60');
+      }
+    });
+
+    // Code Templates for Frameworks
+    const CODE_SNIPPETS = {
+      leptos: preset => `// 1. Cargo.toml
+morpheusicons = { version = "0.1.0", features = ["leptos"] }
+
+// 2. Leptos Component
+use leptos::prelude::*;
+use morpheusicons::integrations::leptos::MorphIcon;
+use morpheusicons::prelude::*;
+
+#[component]
+pub fn ${preset.id}Button() -> impl IntoView {
+    let (controller, set_controller) = signal(
+        IconPair::${preset.id}.create_controller(SpringConfig::BOUNCY).unwrap()
+    );
+    let (path_d, set_path_d) = signal(controller.get_untracked().current_svg_path());
+
+    let toggle = move |_| {
+        set_controller.update(|c| c.toggle());
+        set_path_d.set(controller.get_untracked().current_svg_path());
+    };
+
+    view! {
+        <button on:click=toggle class="p-2 rounded-md bg-background border hover:bg-accent">
+            <MorphIcon d=path_d class="w-6 h-6 text-foreground" />
+        </button>
+    }
+}`,
+
+      gpui: preset => `// 1. Cargo.toml
+morpheusicons = { version = "0.1.0", features = ["gpui"] }
+
+// 2. GPUI Render Function
+use gpui::*;
+use morpheusicons::prelude::*;
+
+fn render_icon(controller: &MorphController) -> impl IntoElement {
+    MorpheusGpui::morph_svg(controller)
+        .size(px(32.0))
+        .text_color(rgb(0x3b82f6))
+}`,
+
+      egui: preset => `// 1. Cargo.toml
+morpheusicons = { version = "0.1.0", features = ["egui"] }
+
+// 2. egui Painter Update
+use egui::{vec2, Color32};
+use morpheusicons::integrations::egui::paint_morph_icon;
+
+fn ui_update(ui: &mut egui::Ui, controller: &MorphController) {
+    paint_morph_icon(ui, controller, vec2(32.0, 32.0), Color32::from_rgb(59, 130, 246), 2.0);
+}`,
+
+      iced: preset => `// 1. Cargo.toml
+morpheusicons = { version = "0.1.0", features = ["iced"] }
+
+// 2. Iced View Function
+use iced::{Element, Length, Theme};
+use morpheusicons::integrations::iced::MorpheusIced;
+
+fn view(controller: &MorphController) -> Element<'_, ()> {
+    MorpheusIced::morph_svg::<Theme>(controller)
+        .width(Length::Fixed(48.0))
+        .height(Length::Fixed(48.0))
+        .into()
+}`,
+
+      dioxus: preset => `// 1. Cargo.toml
+morpheusicons = { version = "0.1.0", features = ["dioxus"] }
+
+// 2. Dioxus RSX Component
+use dioxus::prelude::*;
+use morpheusicons::integrations::dioxus::MorphIcon;
+
+rsx! {
+    MorphIcon { d: "{current_path_d}", size: 32.0, class: "text-blue-500" }
+}`
+    };
+
+    // MorphSyntax is a plain <script>, so it may not have run yet on a slow
+    // load; falling back to plain text keeps the panel readable either way.
+    function setCode(text) {
+      const el = document.getElementById('code-block');
+      if (window.MorphSyntax) {
+        el.innerHTML = window.MorphSyntax.highlight(text, el.dataset.lang || 'rust');
+      } else {
+        el.innerText = text;
+      }
+    }
+
+    function updateCodeBlock() {
+      const snippetFunc = CODE_SNIPPETS[activeTab] || CODE_SNIPPETS.leptos;
+      setCode(snippetFunc(currentPreset));
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('bg-green-700', 'text-white', 'shadow-sm');
+          b.classList.add('text-gray-600', 'bg-transparent');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.remove('text-gray-600', 'bg-transparent');
+        btn.classList.add('bg-green-700', 'text-white', 'shadow-sm');
+        btn.setAttribute('aria-selected', 'true');
+        activeTab = btn.dataset.tab;
+        // Update aria-labelledby to point to the active tab button
+        document.getElementById('code-panel').setAttribute('aria-labelledby', `tab-${activeTab}`);
+        updateCodeBlock();
+      });
+    });
+
+    // Copy Code Snippet (with fallback)
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const codeText = document.getElementById('code-block').innerText;
+      const dict = I18N[currentLang] || I18N.en;
+      try {
+        await navigator.clipboard.writeText(codeText);
+        document.getElementById('i18n-copy-text').innerText = dict.copiedText;
+      } catch {
+        // Fallback for clipboard API failure
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        document.getElementById('i18n-copy-text').innerText = dict.copiedText;
+      }
+      document.getElementById('copy-icon').innerHTML = '<path d="M20 6 9 17l-5-5"/>';
+      setTimeout(() => {
+        document.getElementById('i18n-copy-text').innerText = dict.copyText;
+        document.getElementById('copy-icon').innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';
+      }, 2000);
+    });
+
+    // Copy Install Command
+    document.getElementById('copy-install-btn')?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('cargo add morpheusicons');
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = 'cargo add morpheusicons';
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      const btn = document.getElementById('copy-install-btn');
+      btn.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+      setTimeout(() => {
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+      }, 1500);
+    });
+
+    // --------------------------------------------------------------------------
+    // 5. Main 60FPS Physics Loop (WASM spring solver)
+    // --------------------------------------------------------------------------
+    // The loop runs on demand: it starts when something needs to move and
+    // stops itself once the spring has settled and Auto Loop is off. An
+    // always-on rAF burns battery on an idle tab for no visible benefit.
+    let lastTime = performance.now();
+    let loopHandle = null;
+
+    function requestLoop() {
+      if (loopHandle !== null) return;
+      lastTime = performance.now();
+      loopHandle = requestAnimationFrame(animationLoop);
+    }
+
+    function stopLoop() {
+      if (loopHandle === null) return;
+      cancelAnimationFrame(loopHandle);
+      loopHandle = null;
+    }
+
+    function animationLoop(now) {
+      loopHandle = null;
+
+      if (reducedMotion) {
+        // No interpolation: land on the endpoint and stop. Nothing here
+        // changes on its own, so re-scheduling would spin forever.
+        if (controller) {
+          controller.setProgress(isTarget ? 1.0 : 0.0);
+          updateStageView();
+        }
+        return;
+      }
+
+      const dt = Math.min(0.033, (now - lastTime) / 1000);
+      lastTime = now;
+
+      let isAnimating = false;
+      if (controller) {
+        isAnimating = controller.update(dt);
+        if (isAnimating || autoLoop) {
+          if (autoLoop && !isAnimating) {
+            toggleMorph();
+          }
+          updateStageView();
+        }
+      }
+
+      if (isAnimating || autoLoop) {
+        loopHandle = requestAnimationFrame(animationLoop);
+      }
+    }
+
+    // A hidden tab has nothing to show; drop the loop and pick it back up.
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopLoop();
+      else if (autoLoop) requestLoop();
+    });
+
+    // --------------------------------------------------------------------------
+    // 6. Static Fallback — Show demo content without WASM interactivity
+    // --------------------------------------------------------------------------
+    function showStaticFallback() {
+      // Remove loader
+      const loader = document.getElementById('wasm-loader');
+      if (loader) loader.remove();
+
+      // Unlock page
+      document.getElementById('main-content').removeAttribute('inert');
+      document.getElementById('site-header').removeAttribute('inert');
+
+      // Show all reveal sections
+      document.querySelectorAll('.reveal-section').forEach(el => el.classList.add('revealed'));
+
+      // Replace stage SVG with a CSS crossfade animation showing Sun ↔ Moon
+      const stageSvg = document.getElementById('stage-svg');
+      if (stageSvg) {
+        const container = stageSvg.parentElement;
+        // Remove original SVG
+        stageSvg.remove();
+        // Create crossfade container
+        const crossfade = document.createElement('div');
+        crossfade.className = 'relative w-28 sm:w-36 h-28 sm:h-36';
+        crossfade.setAttribute('aria-label', 'Animated demonstration: Sun morphing to Moon');
+        crossfade.setAttribute('role', 'img');
+        crossfade.innerHTML = `
+          <div class="static-morph-icon static-morph-a">
+            <svg class="w-28 sm:w-36 h-28 sm:h-36 text-green-700 drop-shadow-[0_0_30px_rgba(21,128,61,0.3)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </div>
+          <div class="static-morph-icon static-morph-b">
+            <svg class="w-28 sm:w-36 h-28 sm:h-36 text-green-700 drop-shadow-[0_0_30px_rgba(21,128,61,0.3)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+          </div>
+        `;
+        // Insert before the action label
+        const actionLabel = container.querySelector('p');
+        container.insertBefore(crossfade, actionLabel);
+      }
+
+      // Disable interactive elements that need WASM
+      const stageCard = document.getElementById('stage-card');
+      if (stageCard) {
+        stageCard.removeAttribute('role');
+        stageCard.removeAttribute('tabindex');
+        stageCard.style.cursor = 'default';
+      }
+      document.getElementById('progress-slider')?.setAttribute('disabled', 'true');
+      document.querySelectorAll('.spring-btn').forEach(b => b.setAttribute('disabled', 'true'));
+      document.getElementById('loop-toggle')?.setAttribute('disabled', 'true');
+
+      // Show a notice banner
+      const notice = document.createElement('div');
+      notice.setAttribute('role', 'status');
+      notice.className = 'mb-6 px-5 py-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium flex items-center justify-center gap-2.5 text-left';
+      notice.innerHTML = '<svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Running in static mode — WASM engine unavailable. Interactive morphing is disabled, but you can browse code examples and documentation below.</span>';
+      const main = document.getElementById('main-content');
+      main.insertBefore(notice, main.firstChild);
+
+      // Render preset grids (static, non-functional)
+      const uiGrid = document.getElementById('ui-presets-grid');
+      const wildGrid = document.getElementById('wild-presets-grid');
+      if (uiGrid) {
+        uiGrid.innerHTML = UI_PRESETS.map(p => `
+          <div class="px-3 py-3 text-xs font-semibold rounded-lg glass-pill text-gray-600 flex items-center min-h-[44px]">
+            <span>${p.name}</span>
+          </div>
+        `).join('');
+      }
+      if (wildGrid) {
+        wildGrid.innerHTML = WILD_PRESETS.map(p => `
+          <div class="px-3 py-3 text-xs font-semibold rounded-lg glass-pill text-gray-600 flex items-center min-h-[44px]">
+            <span>${p.name}</span>
+          </div>
+        `).join('');
+      }
+
+      // Update code block with default
+      setCode(CODE_SNIPPETS.leptos(UI_PRESETS[0]));
+
+      // Apply detected language
+      const detectedLang = detectLanguage();
+      applyLanguage(detectedLang);
+
+      // Focus main content
+      main.focus();
+    }
+
+    // --------------------------------------------------------------------------
+    // 7. Initialize — Load WASM then boot the app (with error handling)
+    // --------------------------------------------------------------------------
+    async function boot() {
+      const loaderBar = window.__loaderBar;
+      if (loaderBar) loaderBar.style.width = '90%';
+
+      try {
+        await init();
+      } catch (err) {
+        console.error('[MorpheusIcons] WASM init failed:', err);
+        window.__showLoaderError();
+        // Set up retry (only once — use a flag to prevent duplicate listeners)
+        if (!window.__retryBound) {
+          window.__retryBound = true;
+          document.getElementById('wasm-retry-btn').addEventListener('click', () => {
+            document.getElementById('wasm-error').classList.add('hidden');
+            document.getElementById('loader-bar').parentElement.classList.remove('hidden');
+            document.getElementById('loader-status').textContent = 'Retrying...';
+            boot();
+          });
+          document.getElementById('wasm-skip-btn').addEventListener('click', () => {
+            showStaticFallback();
+          });
+        }
+        return;
+      }
+
+      // Clear timeout on success
+      clearTimeout(window.__loaderTimeout);
+
+      // WASM loaded — finish loader animation
+      if (loaderBar) {
+        loaderBar.style.width = '100%';
+        loaderBar.parentElement.setAttribute('aria-valuenow', '100');
+      }
+      const loaderStatus = document.getElementById('loader-status');
+      if (loaderStatus) loaderStatus.textContent = 'Rust engine ready';
+      clearInterval(window.__loaderInterval);
+
+      // Fade out loader and unlock page
+      const loader = document.getElementById('wasm-loader');
+      document.getElementById('main-content').removeAttribute('inert');
+      document.getElementById('site-header').removeAttribute('inert');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.remove();
+          // Move focus to stage for immediate interaction
+          document.getElementById('stage-card').focus();
+        }, 500);
+      }, 300);
+
+      // Detect language and boot UI
+      const detectedLang = detectLanguage();
+
+      renderPresetGrids();
+      loadPreset(UI_PRESETS[0]);
+      applyLanguage(detectedLang);
+
+      // Settle the stage on its initial frame; the loop parks itself after.
+      requestLoop();
+
+      // Auto-reveal presets on desktop (larger screens have space), keep hidden on mobile until interaction
+      if (window.innerWidth >= 1024) {
+        setTimeout(revealSections, 800);
+      }
+    }
+
+    boot();
+  </script>
+  <!-- Live-reload script for dev mode -->
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const es = new EventSource('/__livereload');
+      es.onmessage = (e) => {
+        if (e.data === 'reload') {
+          console.log('⚡ [Live Reload] Changes detected, reloading...');
+          window.location.reload();
+        }
+      };
+    }
+  </script>
+</body>
+</html>
