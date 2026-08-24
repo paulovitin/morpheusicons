@@ -38,4 +38,4 @@ anyhow = "1.0"
 [dev-dependencies]
 gpui = "0.2.2"
 egui = "0.29"
-eframe = "0.29"
+eframe = "0.36"
