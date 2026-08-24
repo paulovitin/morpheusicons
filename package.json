@@ -4,14 +4,15 @@
   "private": true,
   "description": "Web demo for MorpheusIcons — Physics-based icon morphing",
   "scripts": {
-    "build:css": "node scripts/sync-styles.mjs && tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
-    "watch:css": "node scripts/sync-styles.mjs && tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build:css": "node scripts/sync-styles.mjs && npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --minify",
+    "watch:css": "node scripts/sync-styles.mjs && npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --watch",
     "build:site": "make site",
     "build": "make site",
     "sync:styles": "node scripts/sync-styles.mjs",
     "assemble": "make assemble"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "tailwindcss": "4.3.3"
   }
 }
