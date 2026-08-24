@@ -12,6 +12,6 @@
     "assemble": "make assemble"
   },
   "devDependencies": {
-    "tailwindcss": "3.4.17"
+    "tailwindcss": "4.3.3"
   }
 }

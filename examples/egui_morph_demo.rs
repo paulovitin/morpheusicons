@@ -131,7 +131,7 @@ impl EguiMorphApp {
                 1.0_f32,
                 egui::Color32::from_rgb(22, 163, 74),
             ))
-            .rounding(egui::Rounding::same(8.0))
+            .corner_radius(8.0)
         } else {
             egui::Button::new(
                 egui::RichText::new(text)
@@ -143,7 +143,7 @@ impl EguiMorphApp {
                 1.0_f32,
                 egui::Color32::from_rgb(229, 232, 236),
             ))
-            .rounding(egui::Rounding::same(8.0))
+            .corner_radius(8.0)
         };
 
         if ui.add(button).clicked() {
@@ -166,7 +166,7 @@ impl EguiMorphApp {
 
         let button = egui::Button::new(egui::RichText::new(label).size(12.0).color(text_color))
             .fill(bg_color)
-            .rounding(egui::Rounding::same(6.0));
+            .corner_radius(6.0);
 
         if ui.add(button).clicked() {
             self.select_spring(config);
@@ -176,170 +176,168 @@ impl EguiMorphApp {
 
 #[cfg(feature = "egui")]
 impl eframe::App for EguiMorphApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let active = self.controller.update(ctx.input(|i| i.stable_dt));
         if active {
             ctx.request_repaint();
         }
+    }
 
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let (icon_a, icon_b) = self.current_preset.icons();
         let progress = self.controller.progress();
 
-        egui::CentralPanel::default()
-            .frame(egui::Frame::none().fill(egui::Color32::from_rgb(255, 255, 255)))
-            .show(ctx, |ui| {
-                ui.vertical_centered(|ui| {
-                    ui.add_space(20.0);
+        ui.vertical_centered(|ui| {
+            ui.add_space(20.0);
 
-                    // Title Header
-                    ui.heading(
-                        egui::RichText::new("MorpheusIcons Showcase")
-                            .size(24.0)
-                            .strong()
-                            .color(egui::Color32::from_rgb(17, 19, 23)),
-                    );
-                    ui.label(
-                        egui::RichText::new("Morphing de Ícones Vetoriais em Tempo Real")
-                            .size(12.0)
-                            .color(egui::Color32::from_rgb(86, 92, 102)),
-                    );
+            // Title Header
+            ui.heading(
+                egui::RichText::new("MorpheusIcons Showcase")
+                    .size(24.0)
+                    .strong()
+                    .color(egui::Color32::from_rgb(17, 19, 23)),
+            );
+            ui.label(
+                egui::RichText::new("Morphing de Ícones Vetoriais em Tempo Real")
+                    .size(12.0)
+                    .color(egui::Color32::from_rgb(86, 92, 102)),
+            );
 
-                    ui.add_space(16.0);
+            ui.add_space(16.0);
 
-                    // Segmented Spring Selector
-                    ui.horizontal(|ui| {
-                        ui.add_space((ui.available_width() - 260.0).max(0.0) / 2.0);
-                        ui.label(
-                            egui::RichText::new("spring")
-                                .size(12.0)
-                                .color(egui::Color32::from_rgb(148, 163, 184)),
-                        );
-                        self.segment_btn(ui, "smooth", SpringConfig::SMOOTH);
-                        self.segment_btn(ui, "snappy", SpringConfig::SNAPPY);
-                        self.segment_btn(ui, "bouncy", SpringConfig::BOUNCY);
-                    });
+            // Segmented Spring Selector
+            ui.horizontal(|ui| {
+                ui.add_space((ui.available_width() - 260.0).max(0.0) / 2.0);
+                ui.label(
+                    egui::RichText::new("spring")
+                        .size(12.0)
+                        .color(egui::Color32::from_rgb(148, 163, 184)),
+                );
+                self.segment_btn(ui, "smooth", SpringConfig::SMOOTH);
+                self.segment_btn(ui, "snappy", SpringConfig::SNAPPY);
+                self.segment_btn(ui, "bouncy", SpringConfig::BOUNCY);
+            });
 
-                    ui.add_space(16.0);
+            ui.add_space(16.0);
 
-                    // Main Stage Icon Card
-                    egui::Frame::none()
-                        .fill(egui::Color32::from_rgb(249, 250, 251))
-                        .stroke(egui::Stroke::new(
-                            1.0_f32,
-                            egui::Color32::from_rgb(229, 232, 236),
-                        ))
-                        .rounding(egui::Rounding::same(16.0))
-                        .inner_margin(24.0)
-                        .show(ui, |ui| {
-                            ui.set_max_width(520.0);
-                            ui.vertical_centered(|ui| {
-                                // Icon Container Box
-                                egui::Frame::none()
-                                    .fill(egui::Color32::from_rgb(255, 255, 255))
-                                    .stroke(egui::Stroke::new(
-                                        1.0_f32,
-                                        egui::Color32::from_rgb(229, 232, 236),
-                                    ))
-                                    .rounding(egui::Rounding::same(12.0))
-                                    .inner_margin(22.0)
-                                    .show(ui, |ui| {
-                                        paint_morph_icon(
-                                            ui,
-                                            &self.controller,
-                                            egui::vec2(96.0, 96.0),
-                                            egui::Color32::from_rgb(22, 163, 74),
-                                            3.0,
-                                        );
-                                    });
-
-                                ui.add_space(12.0);
-
-                                // Status Label
-                                ui.label(
-                                    egui::RichText::new(format!("{:?} <-> {:?}", icon_a, icon_b))
-                                        .size(16.0)
-                                        .strong()
-                                        .color(egui::Color32::from_rgb(248, 250, 252)),
+            // Main Stage Icon Card
+            egui::Frame::new()
+                .fill(egui::Color32::from_rgb(249, 250, 251))
+                .stroke(egui::Stroke::new(
+                    1.0_f32,
+                    egui::Color32::from_rgb(229, 232, 236),
+                ))
+                .corner_radius(16.0)
+                .inner_margin(24.0)
+                .show(ui, |ui| {
+                    ui.set_max_width(520.0);
+                    ui.vertical_centered(|ui| {
+                        // Icon Container Box
+                        egui::Frame::new()
+                            .fill(egui::Color32::from_rgb(255, 255, 255))
+                            .stroke(egui::Stroke::new(
+                                1.0_f32,
+                                egui::Color32::from_rgb(229, 232, 236),
+                            ))
+                            .corner_radius(12.0)
+                            .inner_margin(22.0)
+                            .show(ui, |ui| {
+                                paint_morph_icon(
+                                    ui,
+                                    &self.controller,
+                                    egui::vec2(96.0, 96.0),
+                                    egui::Color32::from_rgb(22, 163, 74),
+                                    3.0,
                                 );
-                                ui.label(
-                                    egui::RichText::new(format!(
-                                        "Progresso: {:.1}%",
-                                        progress * 100.0
-                                    ))
-                                    .size(12.0)
-                                    .color(egui::Color32::from_rgb(100, 116, 139)),
-                                );
-
-                                ui.add_space(12.0);
-
-                                // Main Toggle Button
-                                let target_icon = if self.is_forward { icon_a } else { icon_b };
-                                let toggle_btn = egui::Button::new(
-                                    egui::RichText::new(format!("Morph para {:?}", target_icon))
-                                        .size(14.0)
-                                        .strong()
-                                        .color(egui::Color32::WHITE),
-                                )
-                                .fill(egui::Color32::from_rgb(22, 163, 74))
-                                .rounding(egui::Rounding::same(12.0));
-
-                                if ui.add(toggle_btn).clicked() {
-                                    self.toggle_icon();
-                                }
                             });
-                        });
 
-                    ui.add_space(20.0);
+                        ui.add_space(12.0);
 
-                    // Wild Unrelated Section
-                    ui.label(
-                        egui::RichText::new("🔥 Ícones Inusitados:")
+                        // Status Label
+                        ui.label(
+                            egui::RichText::new(format!("{:?} <-> {:?}", icon_a, icon_b))
+                                .size(16.0)
+                                .strong()
+                                .color(egui::Color32::from_rgb(248, 250, 252)),
+                        );
+                        ui.label(
+                            egui::RichText::new(format!(
+                                "Progresso: {:.1}%",
+                                progress * 100.0
+                            ))
                             .size(12.0)
-                            .strong()
-                            .color(egui::Color32::from_rgb(22, 163, 74)),
-                    );
-                    ui.add_space(6.0);
-                    ui.horizontal(|ui| {
-                        ui.add_space((ui.available_width() - 480.0).max(0.0) / 2.0);
-                        self.preset_button(ui, PresetPair::HeartTerminal);
-                        self.preset_button(ui, PresetPair::CpuSun);
-                        self.preset_button(ui, PresetPair::BellCode);
-                        self.preset_button(ui, PresetPair::MailZap);
-                    });
-                    ui.add_space(4.0);
-                    ui.horizontal(|ui| {
-                        ui.add_space((ui.available_width() - 480.0).max(0.0) / 2.0);
-                        self.preset_button(ui, PresetPair::TrashRefresh);
-                        self.preset_button(ui, PresetPair::FolderStar);
-                        self.preset_button(ui, PresetPair::UserLock);
-                        self.preset_button(ui, PresetPair::CalendarPlay);
-                    });
+                            .color(egui::Color32::from_rgb(100, 116, 139)),
+                        );
 
-                    ui.add_space(16.0);
+                        ui.add_space(12.0);
 
-                    // Traditional UI Section
-                    ui.label(
-                        egui::RichText::new("Pares Tradicionais de UI:")
-                            .size(12.0)
-                            .strong()
-                            .color(egui::Color32::from_rgb(148, 163, 184)),
-                    );
-                    ui.add_space(6.0);
-                    ui.horizontal(|ui| {
-                        ui.add_space((ui.available_width() - 360.0).max(0.0) / 2.0);
-                        self.preset_button(ui, PresetPair::SunMoon);
-                        self.preset_button(ui, PresetPair::PlayPause);
-                        self.preset_button(ui, PresetPair::MenuX);
-                    });
-                    ui.add_space(4.0);
-                    ui.horizontal(|ui| {
-                        ui.add_space((ui.available_width() - 360.0).max(0.0) / 2.0);
-                        self.preset_button(ui, PresetPair::LockUnlock);
-                        self.preset_button(ui, PresetPair::EyeEyeOff);
-                        self.preset_button(ui, PresetPair::VolumeMute);
+                        // Main Toggle Button
+                        let target_icon = if self.is_forward { icon_a } else { icon_b };
+                        let toggle_btn = egui::Button::new(
+                            egui::RichText::new(format!("Morph para {:?}", target_icon))
+                                .size(14.0)
+                                .strong()
+                                .color(egui::Color32::WHITE),
+                        )
+                        .fill(egui::Color32::from_rgb(22, 163, 74))
+                        .corner_radius(12.0);
+
+                        if ui.add(toggle_btn).clicked() {
+                            self.toggle_icon();
+                        }
                     });
                 });
+
+            ui.add_space(20.0);
+
+            // Wild Unrelated Section
+            ui.label(
+                egui::RichText::new("🔥 Ícones Inusitados:")
+                    .size(12.0)
+                    .strong()
+                    .color(egui::Color32::from_rgb(22, 163, 74)),
+            );
+            ui.add_space(6.0);
+            ui.horizontal(|ui| {
+                ui.add_space((ui.available_width() - 480.0).max(0.0) / 2.0);
+                self.preset_button(ui, PresetPair::HeartTerminal);
+                self.preset_button(ui, PresetPair::CpuSun);
+                self.preset_button(ui, PresetPair::BellCode);
+                self.preset_button(ui, PresetPair::MailZap);
             });
+            ui.add_space(4.0);
+            ui.horizontal(|ui| {
+                ui.add_space((ui.available_width() - 480.0).max(0.0) / 2.0);
+                self.preset_button(ui, PresetPair::TrashRefresh);
+                self.preset_button(ui, PresetPair::FolderStar);
+                self.preset_button(ui, PresetPair::UserLock);
+                self.preset_button(ui, PresetPair::CalendarPlay);
+            });
+
+            ui.add_space(16.0);
+
+            // Traditional UI Section
+            ui.label(
+                egui::RichText::new("Pares Tradicionais de UI:")
+                    .size(12.0)
+                    .strong()
+                    .color(egui::Color32::from_rgb(148, 163, 184)),
+            );
+            ui.add_space(6.0);
+            ui.horizontal(|ui| {
+                ui.add_space((ui.available_width() - 360.0).max(0.0) / 2.0);
+                self.preset_button(ui, PresetPair::SunMoon);
+                self.preset_button(ui, PresetPair::PlayPause);
+                self.preset_button(ui, PresetPair::MenuX);
+            });
+            ui.add_space(4.0);
+            ui.horizontal(|ui| {
+                ui.add_space((ui.available_width() - 360.0).max(0.0) / 2.0);
+                self.preset_button(ui, PresetPair::LockUnlock);
+                self.preset_button(ui, PresetPair::EyeEyeOff);
+                self.preset_button(ui, PresetPair::VolumeMute);
+            });
+        });
     }
 }
 
