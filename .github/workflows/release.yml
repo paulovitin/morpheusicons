@@ -44,11 +44,13 @@ jobs:
         run: cargo install cargo-semver-checks
       - name: Check semver compliance
         run: |
-          # Skip semver check if this is the first published version (no baseline)
-          if cargo semver-checks check-release 2>&1 | grep -q "no previously published version"; then
-            echo "First release — no baseline to compare. Skipping."
-          else
-            cargo semver-checks check-release
+          # Skip semver check if crate is not yet published (first release)
+          if ! cargo semver-checks check-release 2>&1; then
+            if cargo semver-checks check-release 2>&1 | grep -q "not found in registry"; then
+              echo "First release — crate not yet on crates.io. Skipping semver check."
+            else
+              exit 1
+            fi
           fi
 
   publish:
