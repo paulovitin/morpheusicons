@@ -136,14 +136,17 @@ impl IcedMorphDemo {
             Message::SelectPreset(preset) => {
                 self.current_preset = preset;
                 let (from, to) = preset.icons();
-                self.controller = MorphController::new(from.path_data(), to.path_data(), self.current_spring).unwrap();
+                self.controller =
+                    MorphController::new(from.path_data(), to.path_data(), self.current_spring)
+                        .unwrap();
                 self.is_forward = false;
             }
             Message::SelectSpring(spring) => {
                 self.current_spring = spring;
                 let (from, to) = self.current_preset.icons();
                 let progress = self.controller.progress();
-                self.controller = MorphController::new(from.path_data(), to.path_data(), spring).unwrap();
+                self.controller =
+                    MorphController::new(from.path_data(), to.path_data(), spring).unwrap();
                 self.controller.set_progress(progress);
             }
             Message::Toggle => {
@@ -197,32 +200,46 @@ impl IcedMorphDemo {
         .width(Length::Fixed(520.0));
 
         let wild_pairs = row![
-            button(text(PresetPair::HeartTerminal.name())).on_press(Message::SelectPreset(PresetPair::HeartTerminal)),
-            button(text(PresetPair::CpuSun.name())).on_press(Message::SelectPreset(PresetPair::CpuSun)),
-            button(text(PresetPair::BellCode.name())).on_press(Message::SelectPreset(PresetPair::BellCode)),
-            button(text(PresetPair::MailZap.name())).on_press(Message::SelectPreset(PresetPair::MailZap)),
+            button(text(PresetPair::HeartTerminal.name()))
+                .on_press(Message::SelectPreset(PresetPair::HeartTerminal)),
+            button(text(PresetPair::CpuSun.name()))
+                .on_press(Message::SelectPreset(PresetPair::CpuSun)),
+            button(text(PresetPair::BellCode.name()))
+                .on_press(Message::SelectPreset(PresetPair::BellCode)),
+            button(text(PresetPair::MailZap.name()))
+                .on_press(Message::SelectPreset(PresetPair::MailZap)),
         ]
         .spacing(8);
 
         let wild_pairs2 = row![
-            button(text(PresetPair::TrashRefresh.name())).on_press(Message::SelectPreset(PresetPair::TrashRefresh)),
-            button(text(PresetPair::FolderStar.name())).on_press(Message::SelectPreset(PresetPair::FolderStar)),
-            button(text(PresetPair::UserLock.name())).on_press(Message::SelectPreset(PresetPair::UserLock)),
-            button(text(PresetPair::CalendarPlay.name())).on_press(Message::SelectPreset(PresetPair::CalendarPlay)),
+            button(text(PresetPair::TrashRefresh.name()))
+                .on_press(Message::SelectPreset(PresetPair::TrashRefresh)),
+            button(text(PresetPair::FolderStar.name()))
+                .on_press(Message::SelectPreset(PresetPair::FolderStar)),
+            button(text(PresetPair::UserLock.name()))
+                .on_press(Message::SelectPreset(PresetPair::UserLock)),
+            button(text(PresetPair::CalendarPlay.name()))
+                .on_press(Message::SelectPreset(PresetPair::CalendarPlay)),
         ]
         .spacing(8);
 
         let ui_pairs = row![
-            button(text(PresetPair::SunMoon.name())).on_press(Message::SelectPreset(PresetPair::SunMoon)),
-            button(text(PresetPair::PlayPause.name())).on_press(Message::SelectPreset(PresetPair::PlayPause)),
-            button(text(PresetPair::MenuX.name())).on_press(Message::SelectPreset(PresetPair::MenuX)),
-            button(text(PresetPair::LockUnlock.name())).on_press(Message::SelectPreset(PresetPair::LockUnlock)),
+            button(text(PresetPair::SunMoon.name()))
+                .on_press(Message::SelectPreset(PresetPair::SunMoon)),
+            button(text(PresetPair::PlayPause.name()))
+                .on_press(Message::SelectPreset(PresetPair::PlayPause)),
+            button(text(PresetPair::MenuX.name()))
+                .on_press(Message::SelectPreset(PresetPair::MenuX)),
+            button(text(PresetPair::LockUnlock.name()))
+                .on_press(Message::SelectPreset(PresetPair::LockUnlock)),
         ]
         .spacing(8);
 
         let ui_pairs2 = row![
-            button(text(PresetPair::EyeEyeOff.name())).on_press(Message::SelectPreset(PresetPair::EyeEyeOff)),
-            button(text(PresetPair::VolumeMute.name())).on_press(Message::SelectPreset(PresetPair::VolumeMute)),
+            button(text(PresetPair::EyeEyeOff.name()))
+                .on_press(Message::SelectPreset(PresetPair::EyeEyeOff)),
+            button(text(PresetPair::VolumeMute.name()))
+                .on_press(Message::SelectPreset(PresetPair::VolumeMute)),
         ]
         .spacing(8);
 

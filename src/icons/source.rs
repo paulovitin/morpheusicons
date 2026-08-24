@@ -266,10 +266,7 @@ pub fn validate_icon_source(path_data: &str, viewport: &Viewport) -> ValidationR
 }
 
 /// Validates that two icon sources are compatible for morphing together.
-pub fn validate_morph_pair(
-    source: &dyn IconSource,
-    target: &dyn IconSource,
-) -> ValidationResult {
+pub fn validate_morph_pair(source: &dyn IconSource, target: &dyn IconSource) -> ValidationResult {
     let source_result = source.validate();
     if !source_result.is_valid {
         return source_result;
@@ -387,7 +384,6 @@ fn segment_points(seg: &crate::geometry::path::PathSegment) -> Vec<crate::geomet
         PathSegment::Close => vec![],
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -764,8 +760,7 @@ mod tests {
     #[test]
     fn test_validate_with_cubic_out_of_bounds() {
         // Control points outside viewport should trigger warning
-        let result =
-            validate_icon_source("M0 0 C100 100 200 200 10 10", &Viewport::STANDARD_24);
+        let result = validate_icon_source("M0 0 C100 100 200 200 10 10", &Viewport::STANDARD_24);
         assert!(result.is_valid);
         let has_oob = result
             .warnings

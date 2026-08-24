@@ -121,13 +121,17 @@ impl EguiMorphApp {
         let is_selected = self.current_preset == preset;
         let text = preset.name();
         let button = if is_selected {
-            egui::Button::new(egui::RichText::new(text).size(12.0).color(egui::Color32::WHITE))
-                .fill(egui::Color32::from_rgb(22, 163, 74))
-                .stroke(egui::Stroke::new(
-                    1.0_f32,
-                    egui::Color32::from_rgb(22, 163, 74),
-                ))
-                .rounding(egui::Rounding::same(8.0))
+            egui::Button::new(
+                egui::RichText::new(text)
+                    .size(12.0)
+                    .color(egui::Color32::WHITE),
+            )
+            .fill(egui::Color32::from_rgb(22, 163, 74))
+            .stroke(egui::Stroke::new(
+                1.0_f32,
+                egui::Color32::from_rgb(22, 163, 74),
+            ))
+            .rounding(egui::Rounding::same(8.0))
         } else {
             egui::Button::new(
                 egui::RichText::new(text)

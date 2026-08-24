@@ -248,14 +248,42 @@ impl IconPath {
 
 #[derive(Debug)]
 enum Command {
-    MoveTo { abs: bool, p: Point },
-    LineTo { abs: bool, p: Point },
-    HorizontalLineTo { abs: bool, x: f32 },
-    VerticalLineTo { abs: bool, y: f32 },
-    CubicTo { abs: bool, c1: Point, c2: Point, end: Point },
-    SmoothCubicTo { abs: bool, c2: Point, end: Point },
-    QuadTo { abs: bool, ctrl: Point, end: Point },
-    SmoothQuadTo { abs: bool, end: Point },
+    MoveTo {
+        abs: bool,
+        p: Point,
+    },
+    LineTo {
+        abs: bool,
+        p: Point,
+    },
+    HorizontalLineTo {
+        abs: bool,
+        x: f32,
+    },
+    VerticalLineTo {
+        abs: bool,
+        y: f32,
+    },
+    CubicTo {
+        abs: bool,
+        c1: Point,
+        c2: Point,
+        end: Point,
+    },
+    SmoothCubicTo {
+        abs: bool,
+        c2: Point,
+        end: Point,
+    },
+    QuadTo {
+        abs: bool,
+        ctrl: Point,
+        end: Point,
+    },
+    SmoothQuadTo {
+        abs: bool,
+        end: Point,
+    },
     ArcTo {
         abs: bool,
         rx: f32,
@@ -562,7 +590,6 @@ fn angle_between(ux: f32, uy: f32, vx: f32, vy: f32) -> f32 {
     sign * cos_val.acos()
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -760,7 +787,7 @@ mod tests {
         let sp = &path.subpaths[0];
         // Arc is converted to cubic bezier(s)
         assert!(sp.segments.len() >= 2); // MoveTo + at least 1 CubicTo
-        // Last segment should end at (50, 80)
+                                         // Last segment should end at (50, 80)
         let last_seg = sp.segments.last().unwrap();
         if let PathSegment::CubicTo { end, .. } = last_seg {
             assert!((end.x - 50.0).abs() < 0.1);
@@ -831,10 +858,7 @@ mod tests {
         let path = IconPath::parse("M5 5 L10 10 L5 5 Z").unwrap();
         let sp = &path.subpaths[0];
         // Already at start, so no extra LineTo
-        assert_eq!(
-            sp.segments.last().unwrap(),
-            &PathSegment::Close
-        );
+        assert_eq!(sp.segments.last().unwrap(), &PathSegment::Close);
     }
 
     // --- Multiple subpaths ---
@@ -891,7 +915,10 @@ mod tests {
         let path = IconPath::parse("M-5-10 L-15-20").unwrap();
         let sp = &path.subpaths[0];
         assert_eq!(sp.segments[0], PathSegment::MoveTo(Point::new(-5.0, -10.0)));
-        assert_eq!(sp.segments[1], PathSegment::LineTo(Point::new(-15.0, -20.0)));
+        assert_eq!(
+            sp.segments[1],
+            PathSegment::LineTo(Point::new(-15.0, -20.0))
+        );
     }
 
     #[test]
@@ -978,7 +1005,10 @@ mod tests {
         let path = IconPath::parse("M0 0 L10 0 L10 10 Z").unwrap();
         let scaled = path.scale(3.0);
         assert!(scaled.subpaths[0].is_closed);
-        assert!(scaled.subpaths[0].segments.iter().any(|s| *s == PathSegment::Close));
+        assert!(scaled.subpaths[0]
+            .segments
+            .iter()
+            .any(|s| *s == PathSegment::Close));
     }
 
     // --- SubPath ---

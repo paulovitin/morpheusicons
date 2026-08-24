@@ -99,8 +99,8 @@ impl MorphDemo {
     fn select_preset(&mut self, preset: PresetPair, window: &mut Window, cx: &mut Context<Self>) {
         self.current_preset = preset;
         let (from, to) = preset.icons();
-        self.controller = MorphController::new(from.path_data(), to.path_data(), self.current_spring)
-            .unwrap();
+        self.controller =
+            MorphController::new(from.path_data(), to.path_data(), self.current_spring).unwrap();
         self.is_forward = false;
         self.schedule_next_frame(window, cx);
     }
@@ -121,13 +121,16 @@ impl MorphDemo {
     }
 
     fn schedule_next_frame(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        cx.on_next_frame(window, move |this: &mut Self, _window: &mut Window, cx: &mut Context<Self>| {
-            let active = this.controller.update(0.016);
-            cx.notify();
-            if active {
-                this.schedule_next_frame(_window, cx);
-            }
-        });
+        cx.on_next_frame(
+            window,
+            move |this: &mut Self, _window: &mut Window, cx: &mut Context<Self>| {
+                let active = this.controller.update(0.016);
+                cx.notify();
+                if active {
+                    this.schedule_next_frame(_window, cx);
+                }
+            },
+        );
     }
 }
 
@@ -266,7 +269,10 @@ impl Render for MorphDemo {
                                     this.toggle_icon(window, cx);
                                 }),
                             )
-                            .child(format!("Morph para {:?}", if self.is_forward { icon_a } else { icon_b })),
+                            .child(format!(
+                                "Morph para {:?}",
+                                if self.is_forward { icon_a } else { icon_b }
+                            )),
                     ),
             )
             // Wild Unrelated Section
@@ -368,7 +374,11 @@ impl MorphDemo {
             .rounded_lg()
             .bg(bg_color)
             .border_1()
-            .border_color(if is_selected { rgb(0x16a34a) } else { rgb(0xe5e8ec) })
+            .border_color(if is_selected {
+                rgb(0x16a34a)
+            } else {
+                rgb(0xe5e8ec)
+            })
             .text_color(text_col)
             .text_xs()
             .font_weight(FontWeight::MEDIUM)
@@ -411,7 +421,11 @@ impl MorphDemo {
             .bg(bg_color)
             .text_color(text_col)
             .text_xs()
-            .font_weight(if is_selected { FontWeight::BOLD } else { FontWeight::MEDIUM })
+            .font_weight(if is_selected {
+                FontWeight::BOLD
+            } else {
+                FontWeight::MEDIUM
+            })
             .cursor_pointer()
             .on_mouse_down(
                 MouseButton::Left,

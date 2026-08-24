@@ -126,7 +126,6 @@ impl Spring {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -153,7 +152,10 @@ mod tests {
 
     #[test]
     fn test_spring_config_default_is_smooth() {
-        assert_eq!(SpringConfig::DEFAULT.stiffness, SpringConfig::SMOOTH.stiffness);
+        assert_eq!(
+            SpringConfig::DEFAULT.stiffness,
+            SpringConfig::SMOOTH.stiffness
+        );
         assert_eq!(SpringConfig::DEFAULT.damping, SpringConfig::SMOOTH.damping);
     }
 

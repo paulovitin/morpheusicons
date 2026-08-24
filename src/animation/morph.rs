@@ -47,10 +47,7 @@ impl PathMorpher {
     /// let external_icon = RawIcon::new("M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z");
     /// let morpher = PathMorpher::from_sources(&Icon::Play, &external_icon).unwrap();
     /// ```
-    pub fn from_sources(
-        from: &dyn IconSource,
-        to: &dyn IconSource,
-    ) -> Result<Self, String> {
+    pub fn from_sources(from: &dyn IconSource, to: &dyn IconSource) -> Result<Self, String> {
         let from_path = from.to_icon_path(None)?;
         let to_path = to.to_icon_path(Some(&from.viewport()))?;
         Ok(Self::from_icon_paths(&from_path, &to_path))
@@ -316,7 +313,6 @@ pub fn sampled_icon_to_draw_commands(sampled: &SampledIcon) -> Vec<DrawCommand> 
     commands
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -454,7 +450,9 @@ mod tests {
     fn test_to_draw_commands_contains_cubics() {
         let morpher = PathMorpher::new(MENU_PATH, X_PATH).unwrap();
         let cmds = morpher.to_draw_commands(0.5);
-        let has_cubic = cmds.iter().any(|c| matches!(c, DrawCommand::CubicTo { .. }));
+        let has_cubic = cmds
+            .iter()
+            .any(|c| matches!(c, DrawCommand::CubicTo { .. }));
         assert!(has_cubic);
     }
 

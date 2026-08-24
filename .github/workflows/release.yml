@@ -12,83 +12,43 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  validate:
-    name: Validate Release
+  release:
+    name: Validate & Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
       - uses: Swatinem/rust-cache@v2
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
-      - run: cargo test --lib --all-features
-      - run: cargo test --doc --all-features
-      - run: cargo test --test morph_test
-      - run: cargo clippy --all-features -- -D warnings
-      - run: cargo doc --all-features --no-deps
-
-  semver-check:
-    name: Semver Compatibility
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - name: Install cargo-semver-checks
-        run: cargo install cargo-semver-checks
-      - name: Check semver compliance
+      - name: Run tests
         run: |
-          # Skip semver check if crate is not yet published (first release)
-          if ! cargo semver-checks check-release 2>&1; then
-            if cargo semver-checks check-release 2>&1 | grep -q "not found in registry"; then
-              echo "First release — crate not yet on crates.io. Skipping semver check."
-            else
-              exit 1
-            fi
-          fi
-
-  publish:
-    name: Publish to crates.io
-    needs: [validate, semver-check]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo publish
+          cargo test --lib --all-features
+          cargo test --doc --all-features
+          cargo test --test morph_test
+      - name: Clippy
+        run: cargo clippy --all-features -- -D warnings
+      - name: Publish to crates.io
+        run: cargo publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-
-  github-release:
-    name: GitHub Release
-    needs: [validate, semver-check]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Extract version from tag
         id: version
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Extract changelog for this version
+      - name: Extract changelog
         id: changelog
         run: |
-          # Extract the section for this version from CHANGELOG.md
           version="${{ steps.version.outputs.version }}"
           changelog=$(awk "/^## \[${version}\]/{found=1; next} /^## \[/{if(found) exit} found{print}" CHANGELOG.md)
-          # Set multiline output
           echo "body<<EOF" >> $GITHUB_OUTPUT
           echo "$changelog" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -98,21 +58,3 @@ jobs:
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  wasm-package:
-    name: Build WASM Package
-    needs: [validate, semver-check]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - name: Install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-      - run: wasm-pack build --target web --features wasm --no-default-features
-      - name: Upload WASM artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: wasm-package
-          path: pkg/

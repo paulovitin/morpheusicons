@@ -115,7 +115,6 @@ impl Div<f32> for Point {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;

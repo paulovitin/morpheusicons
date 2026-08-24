@@ -33,8 +33,8 @@
 
 use crate::geometry::path::IconPath;
 use crate::icons::source::{
-    validate_icon_source, validate_morph_pair, RawIcon, ValidationError,
-    ValidationResult, ValidationWarning, Viewport,
+    validate_icon_source, validate_morph_pair, RawIcon, ValidationError, ValidationResult,
+    ValidationWarning, Viewport,
 };
 
 /// Quick check: is this path data string parseable and non-empty?
@@ -188,7 +188,6 @@ impl KnownIconLibrary {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -196,7 +195,8 @@ mod tests {
     const VALID_PATH: &str = "M4 6h16M4 12h16M4 18h16";
     const VALID_PATH_2: &str = "M18 6L6 18M6 6l12 12";
     const COMPLEX_PATH: &str = "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z";
-    const MANY_SUBPATHS: &str = "M0 0L1 1M2 2L3 3M4 4L5 5M6 6L7 7M8 8L9 9M10 10L11 11M12 12L13 13M14 14L15 15M16 16L17 17";
+    const MANY_SUBPATHS: &str =
+        "M0 0L1 1M2 2L3 3M4 4L5 5M6 6L7 7M8 8L9 9M10 10L11 11M12 12L13 13M14 14L15 15M16 16L17 17";
 
     // --- check_path_data ---
 
@@ -271,9 +271,10 @@ mod tests {
     fn test_check_icon_high_subpath_count_warning() {
         let result = check_icon(MANY_SUBPATHS);
         assert!(result.is_valid);
-        let has_warning = result.warnings.iter().any(|w| {
-            matches!(w, ValidationWarning::HighSubpathCount { count } if *count > 8)
-        });
+        let has_warning = result
+            .warnings
+            .iter()
+            .any(|w| matches!(w, ValidationWarning::HighSubpathCount { count } if *count > 8));
         assert!(has_warning);
     }
 
@@ -384,9 +385,10 @@ mod tests {
         let compat =
             check_morph_compatibility(MANY_SUBPATHS, "M0 0 L10 10", &Viewport::STANDARD_24);
         assert!(compat.is_compatible);
-        let has_mismatch = compat.warnings.iter().any(|w| {
-            matches!(w, ValidationWarning::SubpathCountMismatch { .. })
-        });
+        let has_mismatch = compat
+            .warnings
+            .iter()
+            .any(|w| matches!(w, ValidationWarning::SubpathCountMismatch { .. }));
         assert!(has_mismatch);
     }
 
@@ -454,8 +456,7 @@ mod tests {
     #[test]
     fn test_quality_score_perfect_pair() {
         // Same subpath count, no warnings
-        let compat =
-            check_morph_compatibility("M0 0L10 10", "M5 5L15 15", &Viewport::STANDARD_24);
+        let compat = check_morph_compatibility("M0 0L10 10", "M5 5L15 15", &Viewport::STANDARD_24);
         assert!(compat.quality_score >= 0.9);
     }
 

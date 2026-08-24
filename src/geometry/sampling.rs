@@ -188,7 +188,6 @@ fn sample_cubic_bezier(p0: Point, p1: Point, p2: Point, p3: Point, t: f32) -> Po
     )
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -290,7 +289,8 @@ mod tests {
     fn test_sample_subpath_uniform_spacing() {
         let mut sp = SubPath::new();
         sp.segments.push(PathSegment::MoveTo(Point::new(0.0, 0.0)));
-        sp.segments.push(PathSegment::LineTo(Point::new(100.0, 0.0)));
+        sp.segments
+            .push(PathSegment::LineTo(Point::new(100.0, 0.0)));
         let n = 21;
         let samples = sample_subpath(&sp, n);
         // Points should be uniformly spaced at 5.0 intervals
@@ -326,7 +326,8 @@ mod tests {
         let mut sp = SubPath::new();
         sp.segments.push(PathSegment::MoveTo(Point::new(0.0, 0.0)));
         sp.segments.push(PathSegment::LineTo(Point::new(10.0, 0.0)));
-        sp.segments.push(PathSegment::LineTo(Point::new(10.0, 10.0)));
+        sp.segments
+            .push(PathSegment::LineTo(Point::new(10.0, 10.0)));
         sp.segments.push(PathSegment::Close);
         sp.is_closed = true;
         let samples = sample_subpath(&sp, 64);

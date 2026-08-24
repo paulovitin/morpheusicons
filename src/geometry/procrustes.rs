@@ -92,7 +92,6 @@ impl ProcrustesMorphData {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;

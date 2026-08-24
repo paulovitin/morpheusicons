@@ -18,7 +18,11 @@ impl WasmMorphController {
     /// Create a controller from two SVG path `d` strings and a spring preset name.
     /// `spring_preset`: "bouncy", "gentle", "snappy", "smooth", "slomo"
     #[wasm_bindgen(constructor)]
-    pub fn new(from_path: &str, to_path: &str, spring_preset: &str) -> Result<WasmMorphController, JsValue> {
+    pub fn new(
+        from_path: &str,
+        to_path: &str,
+        spring_preset: &str,
+    ) -> Result<WasmMorphController, JsValue> {
         let config = match spring_preset {
             "bouncy" => SpringConfig::BOUNCY,
             "gentle" => SpringConfig::GENTLE,
@@ -27,8 +31,8 @@ impl WasmMorphController {
             "slomo" => SpringConfig::SLO_MO,
             _ => SpringConfig::BOUNCY,
         };
-        let inner = MorphController::new(from_path, to_path, config)
-            .map_err(|e| JsValue::from_str(&e))?;
+        let inner =
+            MorphController::new(from_path, to_path, config).map_err(|e| JsValue::from_str(&e))?;
         Ok(WasmMorphController { inner })
     }
 
@@ -46,7 +50,8 @@ impl WasmMorphController {
             "slomo" => SpringConfig::SLO_MO,
             _ => SpringConfig::BOUNCY,
         };
-        let inner = pair.create_controller(config)
+        let inner = pair
+            .create_controller(config)
             .map_err(|e| JsValue::from_str(&e))?;
         Ok(WasmMorphController { inner })
     }
@@ -101,18 +106,15 @@ impl WasmMorphController {
             "slomo" => SpringConfig::SLO_MO,
             _ => SpringConfig::BOUNCY,
         };
-        self.inner = MorphController::from_morpher(
-            self.inner.morpher().clone(),
-            config,
-        );
+        self.inner = MorphController::from_morpher(self.inner.morpher().clone(), config);
     }
 }
 
 /// Get the SVG path `d` string for a named icon from the catalog.
 #[wasm_bindgen(js_name = "getIconPath")]
 pub fn get_icon_path(name: &str) -> Result<String, JsValue> {
-    let icon = parse_icon(name)
-        .ok_or_else(|| JsValue::from_str(&format!("Unknown icon: {name}")))?;
+    let icon =
+        parse_icon(name).ok_or_else(|| JsValue::from_str(&format!("Unknown icon: {name}")))?;
     Ok(icon.path_data().to_string())
 }
 
@@ -120,34 +122,108 @@ pub fn get_icon_path(name: &str) -> Result<String, JsValue> {
 #[wasm_bindgen(js_name = "listIcons")]
 pub fn list_icons() -> String {
     let names = [
-        "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp",
-        "ChevronDown", "ChevronUp", "ChevronLeft", "ChevronRight",
-        "CornerDownRight", "CornerUpRight",
-        "Check", "X", "Plus", "Minus", "PlusCircle", "MinusCircle",
-        "CheckCircle", "XCircle",
-        "Play", "Pause", "Square", "Volume2", "VolumeX",
-        "Sun", "Moon", "Zap",
-        "Lock", "Unlock", "Eye", "EyeOff",
-        "Search", "Menu", "Grid", "Sliders", "Filter", "Layers",
-        "Maximize2", "Minimize2",
-        "Heart", "Star", "Bell", "Bookmark", "Settings", "User",
-        "Home", "Folder", "Mail", "Calendar", "Clock", "Terminal",
-        "Code", "Cpu", "Copy", "Trash", "Download", "Upload",
-        "RefreshCw", "Share2", "ExternalLink", "Edit3",
+        "ArrowRight",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowUp",
+        "ChevronDown",
+        "ChevronUp",
+        "ChevronLeft",
+        "ChevronRight",
+        "CornerDownRight",
+        "CornerUpRight",
+        "Check",
+        "X",
+        "Plus",
+        "Minus",
+        "PlusCircle",
+        "MinusCircle",
+        "CheckCircle",
+        "XCircle",
+        "Play",
+        "Pause",
+        "Square",
+        "Volume2",
+        "VolumeX",
+        "Sun",
+        "Moon",
+        "Zap",
+        "Lock",
+        "Unlock",
+        "Eye",
+        "EyeOff",
+        "Search",
+        "Menu",
+        "Grid",
+        "Sliders",
+        "Filter",
+        "Layers",
+        "Maximize2",
+        "Minimize2",
+        "Heart",
+        "Star",
+        "Bell",
+        "Bookmark",
+        "Settings",
+        "User",
+        "Home",
+        "Folder",
+        "Mail",
+        "Calendar",
+        "Clock",
+        "Terminal",
+        "Code",
+        "Cpu",
+        "Copy",
+        "Trash",
+        "Download",
+        "Upload",
+        "RefreshCw",
+        "Share2",
+        "ExternalLink",
+        "Edit3",
     ];
-    format!("[{}]", names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(","))
+    format!(
+        "[{}]",
+        names
+            .iter()
+            .map(|n| format!("\"{}\"", n))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
 }
 
 /// Get all available icon pair names as a JSON array string.
 #[wasm_bindgen(js_name = "listPairs")]
 pub fn list_pairs() -> String {
     let pairs = [
-        "PlayPause", "SunMoon", "MenuX", "LockUnlock", "EyeEyeOff",
-        "VolumeMute", "PlusMinus", "MaximizeMinimize", "ChevronUpDown", "CheckX",
-        "HeartTerminal", "CpuSun", "BellCode", "MailZap",
-        "TrashRefresh", "FolderStar", "UserLock", "CalendarPlay",
+        "PlayPause",
+        "SunMoon",
+        "MenuX",
+        "LockUnlock",
+        "EyeEyeOff",
+        "VolumeMute",
+        "PlusMinus",
+        "MaximizeMinimize",
+        "ChevronUpDown",
+        "CheckX",
+        "HeartTerminal",
+        "CpuSun",
+        "BellCode",
+        "MailZap",
+        "TrashRefresh",
+        "FolderStar",
+        "UserLock",
+        "CalendarPlay",
     ];
-    format!("[{}]", pairs.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(","))
+    format!(
+        "[{}]",
+        pairs
+            .iter()
+            .map(|n| format!("\"{}\"", n))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
 }
 
 fn parse_icon(name: &str) -> Option<Icon> {

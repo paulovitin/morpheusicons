@@ -224,10 +224,7 @@ fn rect_to_path(attrs: &[(String, String)]) -> Option<String> {
 
     if rx <= 0.0 && ry <= 0.0 {
         // Simple rectangle
-        Some(format!(
-            "M{} {}h{}v{}h{}z",
-            x, y, w, h, -w
-        ))
+        Some(format!("M{} {}h{}v{}h{}z", x, y, w, h, -w))
     } else {
         // Rounded rectangle
         let rx = rx.min(w / 2.0);
@@ -283,8 +280,7 @@ fn polyline_to_path(attrs: &[(String, String)], close: bool) -> Option<String> {
 /// Detects viewport from `viewBox` attribute or `width`/`height` attributes.
 fn detect_viewport(svg: &str) -> (f32, f32) {
     // Try viewBox first: viewBox="minX minY width height"
-    if let Some(viewbox) = find_root_attr(svg, "viewBox")
-        .or_else(|| find_root_attr(svg, "viewbox"))
+    if let Some(viewbox) = find_root_attr(svg, "viewBox").or_else(|| find_root_attr(svg, "viewbox"))
     {
         let parts: Vec<f32> = viewbox
             .split_whitespace()
@@ -331,7 +327,13 @@ fn extract_attr_values(svg: &str, element: &str, attr_name: &str) -> Vec<String>
         let after_tag = abs_start + search_open.len();
         if after_tag < svg.len() {
             let next_char = svg.as_bytes()[after_tag];
-            if next_char != b' ' && next_char != b'/' && next_char != b'>' && next_char != b'\t' && next_char != b'\n' && next_char != b'\r' {
+            if next_char != b' '
+                && next_char != b'/'
+                && next_char != b'>'
+                && next_char != b'\t'
+                && next_char != b'\n'
+                && next_char != b'\r'
+            {
                 pos = after_tag;
                 continue;
             }
@@ -361,7 +363,13 @@ fn extract_element_attrs(svg: &str, element: &str) -> Vec<Vec<(String, String)>>
         let after_tag = abs_start + search_open.len();
         if after_tag < svg.len() {
             let next_char = svg.as_bytes()[after_tag];
-            if next_char != b' ' && next_char != b'/' && next_char != b'>' && next_char != b'\t' && next_char != b'\n' && next_char != b'\r' {
+            if next_char != b' '
+                && next_char != b'/'
+                && next_char != b'>'
+                && next_char != b'\t'
+                && next_char != b'\n'
+                && next_char != b'\r'
+            {
                 pos = after_tag;
                 continue;
             }
@@ -434,7 +442,12 @@ fn parse_all_attributes(tag: &str) -> Vec<(String, String)> {
 
     while pos < len {
         // Skip whitespace
-        while pos < len && (bytes[pos] == b' ' || bytes[pos] == b'\t' || bytes[pos] == b'\n' || bytes[pos] == b'\r') {
+        while pos < len
+            && (bytes[pos] == b' '
+                || bytes[pos] == b'\t'
+                || bytes[pos] == b'\n'
+                || bytes[pos] == b'\r')
+        {
             pos += 1;
         }
 
@@ -444,7 +457,12 @@ fn parse_all_attributes(tag: &str) -> Vec<(String, String)> {
 
         // Read attribute name
         let name_start = pos;
-        while pos < len && bytes[pos] != b'=' && bytes[pos] != b' ' && bytes[pos] != b'/' && bytes[pos] != b'>' {
+        while pos < len
+            && bytes[pos] != b'='
+            && bytes[pos] != b' '
+            && bytes[pos] != b'/'
+            && bytes[pos] != b'>'
+        {
             pos += 1;
         }
         let name = &tag[name_start..pos];
@@ -503,18 +521,24 @@ fn parse_points(points: &str) -> Vec<(f32, f32)> {
         .filter_map(|s| s.parse::<f32>().ok())
         .collect();
 
-    numbers.chunks(2).filter_map(|chunk| {
-        if chunk.len() == 2 {
-            Some((chunk[0], chunk[1]))
-        } else {
-            None
-        }
-    }).collect()
+    numbers
+        .chunks(2)
+        .filter_map(|chunk| {
+            if chunk.len() == 2 {
+                Some((chunk[0], chunk[1]))
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 /// Parses a dimension string like "24", "24px", "24.5" into a float.
 fn parse_dimension(s: &str) -> Option<f32> {
-    let numeric: String = s.chars().take_while(|c| c.is_ascii_digit() || *c == '.').collect();
+    let numeric: String = s
+        .chars()
+        .take_while(|c| c.is_ascii_digit() || *c == '.')
+        .collect();
     numeric.parse::<f32>().ok()
 }
 

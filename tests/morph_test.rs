@@ -163,10 +163,6 @@ fn test_catalog_all_icons_valid() {
 
     for icon in catalog {
         let parsed = IconPath::parse(icon.path_data());
-        assert!(
-            parsed.is_ok(),
-            "Failed to parse icon {:?}",
-            icon
-        );
+        assert!(parsed.is_ok(), "Failed to parse icon {:?}", icon);
     }
 }

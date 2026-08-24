@@ -43,29 +43,31 @@ pub use animation::{
     PathMorpher, Spring, SpringConfig,
 };
 pub use geometry::{IconPath, PathSegment, Point, ProcrustesMorphData, SampledIcon, SubPath};
-pub use icons::{Icon, IconPair};
-pub use icons::{IconSource, RawIcon, Viewport, ValidationResult, ValidationError, ValidationWarning};
+pub use icons::{
+    check_icon, check_morph_compatibility, check_path_data, KnownIconLibrary, MorphCompatibility,
+};
 pub use icons::{extract_path_from_svg, icon_from_svg, SvgExtraction};
-pub use icons::{check_icon, check_morph_compatibility, check_path_data, MorphCompatibility, KnownIconLibrary};
+pub use icons::{Icon, IconPair};
+pub use icons::{
+    IconSource, RawIcon, ValidationError, ValidationResult, ValidationWarning, Viewport,
+};
 pub use integrations::SvgRenderer;
 
 /// Convenient prelude module for easy importing.
 pub mod prelude {
-    pub use crate::animation::{
-        DrawCommand, MorphController, PathMorpher, Spring, SpringConfig,
-    };
+    pub use crate::animation::{DrawCommand, MorphController, PathMorpher, Spring, SpringConfig};
     pub use crate::geometry::{IconPath, Point, SampledIcon};
+    pub use crate::icons::{extract_path_from_svg, icon_from_svg};
     pub use crate::icons::{Icon, IconPair};
     pub use crate::icons::{IconSource, RawIcon, Viewport};
-    pub use crate::icons::{extract_path_from_svg, icon_from_svg};
     pub use crate::integrations::SvgRenderer;
 
+    #[cfg(feature = "dioxus")]
+    pub use crate::integrations::dioxus::MorphIcon as DioxusMorphIcon;
     #[cfg(feature = "gpui")]
     pub use crate::integrations::gpui::MorpheusGpui;
     #[cfg(feature = "iced")]
     pub use crate::integrations::iced::MorpheusIced;
     #[cfg(feature = "leptos")]
     pub use crate::integrations::leptos::MorphIcon as LeptosMorphIcon;
-    #[cfg(feature = "dioxus")]
-    pub use crate::integrations::dioxus::MorphIcon as DioxusMorphIcon;
 }
