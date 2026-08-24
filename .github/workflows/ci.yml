@@ -57,6 +57,20 @@ jobs:
   test-macos:
     name: Tests (macOS)
     runs-on: macos-latest
+    env:
+      RUSTFLAGS: "-C split-debuginfo=unpacked"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Tests
+        run: |
+          cargo test --lib --all-features
+          cargo test --test morph_test
+
+  test-windows:
+    name: Tests (windows-latest, stable)
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
