@@ -33,7 +33,7 @@ fn main() -> Result<(), String> {
         let filename = format!("assets/examples/{}_midpoint.svg", name);
         // Ensure output directory exists
         let _ = std::fs::create_dir_all("assets/examples");
-        if let Ok(_) = std::fs::write(&filename, mid_svg) {
+        if std::fs::write(&filename, mid_svg).is_ok() {
             println!("  Saved midpoint SVG frame to './{}'", filename);
         }
     }

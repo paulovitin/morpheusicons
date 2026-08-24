@@ -835,7 +835,7 @@ mod tests {
         let sp = &path.subpaths[0];
         assert!(sp.is_closed);
         // Should have: MoveTo, LineTo, LineTo, LineTo(back to start), Close
-        assert!(sp.segments.iter().any(|s| *s == PathSegment::Close));
+        assert!(sp.segments.contains(&PathSegment::Close));
     }
 
     #[test]
@@ -923,11 +923,11 @@ mod tests {
 
     #[test]
     fn test_parse_floating_point() {
-        let path = IconPath::parse("M1.5 2.7 L3.14 4.99").unwrap();
+        let path = IconPath::parse("M1.5 2.7 L3.25 4.99").unwrap();
         let sp = &path.subpaths[0];
         assert_eq!(sp.segments[0], PathSegment::MoveTo(Point::new(1.5, 2.7)));
         if let PathSegment::LineTo(p) = &sp.segments[1] {
-            assert!((p.x - 3.14).abs() < 1e-5);
+            assert!((p.x - 3.25).abs() < 1e-5);
             assert!((p.y - 4.99).abs() < 1e-5);
         }
     }
@@ -1005,10 +1005,7 @@ mod tests {
         let path = IconPath::parse("M0 0 L10 0 L10 10 Z").unwrap();
         let scaled = path.scale(3.0);
         assert!(scaled.subpaths[0].is_closed);
-        assert!(scaled.subpaths[0]
-            .segments
-            .iter()
-            .any(|s| *s == PathSegment::Close));
+        assert!(scaled.subpaths[0].segments.contains(&PathSegment::Close));
     }
 
     // --- SubPath ---

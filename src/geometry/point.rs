@@ -276,6 +276,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::clone_on_copy)]
     fn test_clone_and_copy() {
         let p = Point::new(1.0, 2.0);
         let q = p; // Copy

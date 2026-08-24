@@ -8,90 +8,92 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
 
 jobs:
-  check:
-    name: Check, Format, Clippy & Test
+  fmt:
+    name: Formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
+          components: rustfmt
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
       - uses: Swatinem/rust-cache@v2
       - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
-      - name: Format check
-        run: cargo fmt --all -- --check
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
       - name: Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
-      - name: Unit tests
-        run: cargo test --lib --all-features
-      - name: Integration tests
-        run: cargo test --test morph_test
-      - name: Doc tests
-        run: cargo test --doc --all-features
 
-#  test-os:
-#    name: Tests (${{ matrix.os }})
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [macos-latest, windows-latest]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: dtolnay/rust-toolchain@stable
-#      - uses: Swatinem/rust-cache@v2
-#      - run: cargo test --lib --all-features
-#      - run: cargo test --test morph_test
+  test:
+    name: Tests (ubuntu-latest, stable)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
+      - name: Tests
+        run: |
+          cargo test --all-targets --all-features
+          cargo test --doc --all-features
 
-#  deny:
-#    name: Cargo Deny
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: EmbarkStudios/cargo-deny-action@v2
+  test-macos:
+    name: Tests (macos-latest, stable)
+    runs-on: macos-latest
+    env:
+      RUSTFLAGS: "-C split-debuginfo=unpacked"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Tests
+        run: |
+          cargo test --lib --all-features
+          cargo test --test morph_test
 
-#  coverage:
-#    name: Code Coverage
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: dtolnay/rust-toolchain@stable
-#      - uses: Swatinem/rust-cache@v2
-#      - name: Install system dependencies
-#        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev
-#      - name: Install cargo-tarpaulin
-#        run: cargo install cargo-tarpaulin
-#      - name: Run coverage
-#        run: cargo tarpaulin --all-features --lib --out xml --output-dir coverage/
-#      - name: Upload coverage to Codecov
-#        uses: codecov/codecov-action@v4
-#        with:
-#          files: coverage/cobertura.xml
-#          fail_ci_if_error: false
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  test-windows:
+    name: Tests (windows-latest, stable)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Tests
+        run: |
+          cargo test --lib --all-features
+          cargo test --test morph_test
 
-#  audit:
-#    name: Security Audit
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: rustsec/audit-check@v2
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
+  deny:
+    name: Cargo Deny
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
 
-#  wasm:
-#    name: WebAssembly Build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: dtolnay/rust-toolchain@stable
-#        with:
-#          targets: wasm32-unknown-unknown
-#      - uses: Swatinem/rust-cache@v2
-#      - run: cargo check --target wasm32-unknown-unknown --features wasm --no-default-features
+  wasm:
+    name: WebAssembly Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --target wasm32-unknown-unknown --features wasm --no-default-features
