@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-24
+
+### Changed
+
+- Bump `egui` 0.29 → 0.36 and `eframe` 0.29 → 0.36
+- Bump `leptos` 0.7 → 0.8
+- Bump `dioxus` 0.6 → 0.7
+- Bump `iced` 0.13 → 0.14
+- Bump `tailwindcss` 3.4.17 → 4.3.3
+- Bump GitHub Actions: checkout v7, setup-node v7, upload-pages-artifact v5, deploy-pages v5
+
+### Fixed
+
+- Adapt egui examples for 0.36 API (`Frame::new()`, `corner_radius()`, `App::ui()`)
+- Adapt iced example for 0.14 API (boot function)
+- Pin `termcolor <1.4` to fix naga 27 compile error (upstream breaking change)
+- Allow `Ubuntu-font-1.0` license in cargo-deny (new epaint_default_fonts dep)
+
 ## [0.1.1] - 2026-08-24
 
 ### Added
