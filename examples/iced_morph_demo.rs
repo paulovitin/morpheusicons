@@ -14,10 +14,11 @@ use morpheusicons::prelude::*;
 #[cfg(feature = "iced")]
 fn main() -> iced::Result {
     iced::application(
-        "MorpheusIcons - Iced Showcase",
+        IcedMorphDemo::boot,
         IcedMorphDemo::update,
         IcedMorphDemo::view,
     )
+    .title("MorpheusIcons - Iced Showcase")
     .subscription(IcedMorphDemo::subscription)
     .theme(IcedMorphDemo::theme)
     .run()
@@ -131,6 +132,10 @@ impl Default for IcedMorphDemo {
 
 #[cfg(feature = "iced")]
 impl IcedMorphDemo {
+    fn boot() -> (Self, Task<Message>) {
+        (Self::default(), Task::none())
+    }
+
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::SelectPreset(preset) => {

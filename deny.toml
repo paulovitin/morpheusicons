@@ -46,6 +46,7 @@ allow = [
     "MPL-2.0",
     "OpenSSL",
     "LicenseRef-UFL-1.0",
+    "Ubuntu-font-1.0",
 ]
 
 [[licenses.clarify]]
