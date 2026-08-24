@@ -294,10 +294,10 @@ mod tests {
         let n = 21;
         let samples = sample_subpath(&sp, n);
         // Points should be uniformly spaced at 5.0 intervals
-        for i in 0..n {
+        for (i, sample) in samples.iter().enumerate().take(n) {
             let expected_x = (i as f32) * 5.0;
-            assert!((samples[i].x - expected_x).abs() < 0.1);
-            assert!((samples[i].y).abs() < 1e-4);
+            assert!((sample.x - expected_x).abs() < 0.1);
+            assert!((sample.y).abs() < 1e-4);
         }
     }
 
@@ -406,7 +406,7 @@ mod tests {
         let sampled_b = SampledIcon::sample(&icon_b, 8);
         let (aligned_a, aligned_b) = sampled_a.align_with(sampled_b, 8);
         assert_eq!(aligned_a.subpaths.len(), aligned_b.subpaths.len());
-        assert!(aligned_a.subpaths.len() >= 1);
+        assert!(!aligned_a.subpaths.is_empty());
     }
 
     #[test]

@@ -354,9 +354,7 @@ impl eframe::App for RustUiShowcaseApp {
                                 );
                             });
                             ui.add_space(4.0);
-                            let snippet = format!(
-                                "<button class=\"inline-flex items-center justify-center p-2 rounded-md bg-background hover:bg-accent\">\n  <MorphIcon d=path_d class=\"w-6 h-6 text-foreground\" />\n</button>"
-                            );
+                            let snippet = "<button class=\"inline-flex items-center justify-center p-2 rounded-md bg-background hover:bg-accent\">\n  <MorphIcon d=path_d class=\"w-6 h-6 text-foreground\" />\n</button>".to_string();
                             ui.label(
                                 egui::RichText::new(snippet)
                                     .size(11.0)
