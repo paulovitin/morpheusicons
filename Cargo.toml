@@ -27,7 +27,7 @@ serde = ["dep:serde"]
 
 [dependencies]
 gpui = { version = "0.2.2", optional = true }
-egui = { version = "0.29", optional = true }
+egui = { version = "0.36", optional = true }
 leptos = { version = "0.7", optional = true }
 dioxus = { version = "0.6", optional = true }
 iced = { version = "0.13", optional = true, features = ["svg"] }
@@ -37,5 +37,5 @@ anyhow = "1.0"
 
 [dev-dependencies]
 gpui = "0.2.2"
-egui = "0.29"
+egui = "0.36"
 eframe = "0.29"
