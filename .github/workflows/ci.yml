@@ -9,8 +9,6 @@ on:
 env:
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: 0
-  RUSTC_WRAPPER: sccache
-  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   clippy:
@@ -21,8 +19,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - name: Run sccache-cache
-        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - name: Install system dependencies
         run: |
@@ -39,8 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: Run sccache-cache
-        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - name: Install system dependencies
         run: |
@@ -57,8 +51,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: Run sccache-cache
-        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - name: Tests
         run: |
@@ -80,7 +72,5 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - name: Run sccache-cache
-        uses: mozilla/actions-sccache@v1
       - uses: Swatinem/rust-cache@v2
       - run: cargo check --target wasm32-unknown-unknown --features wasm --no-default-features
