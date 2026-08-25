@@ -16,7 +16,7 @@ const END = '<!-- impeccable:styles:end -->';
 
 const css = readFileSync('src/input.css', 'utf8')
   .split('\n')
-  .filter((line) => !line.startsWith('@tailwind'))
+  .filter((line) => !line.startsWith('@tailwind') && !line.startsWith('@import "tailwindcss"') && !line.startsWith('@config'))
   .join('\n')
   .trim();
 
